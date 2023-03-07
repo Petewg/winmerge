@@ -24,9 +24,9 @@
 #include "Constants.h"
 
 // Functions to copy values set by installer from HKLM to HKCU.
-static bool OpenHKLM(HKEY *key, LPCTSTR relpath = nullptr);
-static bool OpenHKCU(HKEY *key, LPCTSTR relpath = nullptr);
-static void CopyFromLMtoCU(HKEY lmKey, HKEY cuKey, LPCTSTR valname);
+static bool OpenHKLM(HKEY *key, const tchar_t* relpath = nullptr);
+static bool OpenHKCU(HKEY *key, const tchar_t* relpath = nullptr);
+static void CopyFromLMtoCU(HKEY lmKey, HKEY cuKey, const tchar_t* valname);
 
 namespace Options
 {
@@ -81,12 +81,14 @@ void Init(COptionsMgr *pOptions)
 	pOptions->InitOption(OPT_VIEW_FILEMARGIN, false);
 	pOptions->InitOption(OPT_VIEW_TOPMARGIN, false);
 	pOptions->InitOption(OPT_VIEW_TOPMARGIN_TABLE, true);
+	pOptions->InitOption(OPT_VIEW_ZOOM, 1000, 100, 8000);
 	pOptions->InitOption(OPT_LINE_NUMBER_USED_AS_HEADERS, -1);
 	pOptions->InitOption(OPT_DIFF_CONTEXT, (int)-1);
 	pOptions->InitOption(OPT_INVERT_DIFF_CONTEXT, false);
 	pOptions->InitOption(OPT_SPLIT_HORIZONTALLY, false);
 	pOptions->InitOption(OPT_RENDERING_MODE, -1, 0, 6);
 	pOptions->InitOption(OPT_FILE_SIZE_THRESHOLD, 64*1024*1024);
+	pOptions->InitOption(OPT_AUTO_RELOAD_MODIFIED_FILES, 1);
 
 	pOptions->InitOption(OPT_WORDDIFF_HIGHLIGHT, true);
 	pOptions->InitOption(OPT_BREAK_SEPARATORS, _T(".,:;?[](){}<=>`'!\"#$%&^~\\|@+-*/"));
@@ -171,6 +173,17 @@ void Init(COptionsMgr *pOptions)
 	pOptions->InitOption(OPT_CMP_IMG_INSERTIONDELETIONDETECTION_MODE, 0, 0, 2);
 	pOptions->InitOption(OPT_CMP_IMG_VECTOR_IMAGE_ZOOM_RATIO, 1000, 1, 8000);
 	pOptions->InitOption(OPT_CMP_IMG_OCR_RESULT_TYPE, 0, 0, 2);
+
+	pOptions->InitOption(OPT_CMP_WEB_USERDATAFOLDER_TYPE, 0, 0, 1);
+	pOptions->InitOption(OPT_CMP_WEB_USERDATAFOLDER_PERPANE, true);
+	pOptions->InitOption(OPT_CMP_WEB_FIT_TO_WINDOW, true);
+	pOptions->InitOption(OPT_CMP_WEB_SHOWDIFFERENCES, true);
+	pOptions->InitOption(OPT_CMP_WEB_VIEW_WIDTH, 1024, 1, 9999);
+	pOptions->InitOption(OPT_CMP_WEB_VIEW_HEIGHT, 600, 1, 9999);
+	pOptions->InitOption(OPT_CMP_WEB_ZOOM, 1000, 250, 5000);
+	pOptions->InitOption(OPT_CMP_WEB_USER_AGENT, _T(""));
+	pOptions->InitOption(OPT_CMP_WEB_URL_PATTERN_TO_INCLUDE, _T(""));
+	pOptions->InitOption(OPT_CMP_WEB_URL_PATTERN_TO_EXCLUDE, _T(""));
 
 	pOptions->InitOption(OPT_PROJECTS_PATH, _T(""));
 	pOptions->InitOption(OPT_USE_SYSTEM_TEMP_PATH, true);
@@ -273,9 +286,9 @@ void CopyHKLMValues()
  * @param [in] relpath Relative registry path (to WinMerge reg path) to open, or nullptr.
  * @return true if opening succeeded.
  */
-static bool OpenHKLM(HKEY *key, LPCTSTR relpath)
+static bool OpenHKLM(HKEY *key, const tchar_t* relpath)
 {
-	TCHAR valuename[256];
+	tchar_t valuename[256];
 	if (relpath)
 		wsprintf(valuename, _T("%s\\%s"), RegDir, relpath);
 	else
@@ -296,9 +309,9 @@ static bool OpenHKLM(HKEY *key, LPCTSTR relpath)
  * @param [in] relpath Relative registry path (to WinMerge reg path) to open, or nullptr.
  * @return true if opening succeeded.
  */
-static bool OpenHKCU(HKEY *key, LPCTSTR relpath)
+static bool OpenHKCU(HKEY *key, const tchar_t* relpath)
 {
-	TCHAR valuename[256];
+	tchar_t valuename[256];
 	if (relpath)
 		wsprintf(valuename, _T("%s\\%s"), RegDir, relpath);
 	else
@@ -325,7 +338,7 @@ static bool OpenHKCU(HKEY *key, LPCTSTR relpath)
  * @param [in] cuKey HKCU key to where to copy.
  * @param [in] valname Name of the value to copy.
  */
-static void CopyFromLMtoCU(HKEY lmKey, HKEY cuKey, LPCTSTR valname)
+static void CopyFromLMtoCU(HKEY lmKey, HKEY cuKey, const tchar_t* valname)
 {
 	DWORD len = 0;
 	LONG retval = RegQueryValueEx(cuKey, valname, 0, nullptr, nullptr, &len);

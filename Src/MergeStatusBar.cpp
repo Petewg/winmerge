@@ -69,6 +69,7 @@ static UINT indicatorsBottom[] =
 };
 
 BEGIN_MESSAGE_MAP(CMergeStatusBar, CStatusBar)
+	ON_WM_SETCURSOR()
 END_MESSAGE_MAP()
 
 /**
@@ -93,7 +94,7 @@ CMergeStatusBar::~CMergeStatusBar()
 
 BOOL CMergeStatusBar::Create(CWnd* pParentWnd)
 {
-	if (! CStatusBar::Create(pParentWnd))
+	if (! __super::Create(pParentWnd))
 		return FALSE;
 
 	SetIndicators(indicatorsBottom, sizeof(indicatorsBottom) / sizeof(UINT));
@@ -295,8 +296,8 @@ static String EolString(const String & sEol)
 }
 
 /// Receive status line info from crystal window and display
-void CMergeStatusBar::MergeStatus::SetLineInfo(LPCTSTR szLine, int nColumn,
-		int nColumns, int nChar, int nChars, int nSelectedLines, int nSelectedChars, LPCTSTR szEol, int nCodepage, bool bHasBom)
+void CMergeStatusBar::MergeStatus::SetLineInfo(const tchar_t* szLine, int nColumn,
+		int nColumns, int nChar, int nChars, int nSelectedLines, int nSelectedChars, const tchar_t* szEol, int nCodepage, bool bHasBom)
 {
 	if (m_sLine != szLine || m_nColumn != nColumn || m_nColumns != nColumns ||
 		m_nChar != nChar || m_nChars != nChars || 
@@ -324,3 +325,10 @@ void CMergeStatusBar::MergeStatus::SetLineInfo(LPCTSTR szLine, int nColumn,
 		Update();
 	}
 }
+
+BOOL CMergeStatusBar::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+{
+    ::SetCursor (::LoadCursor (nullptr, IDC_HAND));
+	return TRUE;
+}
+

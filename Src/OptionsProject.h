@@ -18,10 +18,11 @@ enum class Item
 {
 	FileFilter,
 	IncludeSubfolders,
-	UnpackerPlugin,
-	CompareOptions
+	Plugin,
+	CompareOptions,
+	HiddenItems
 };
-constexpr int ItemCount = static_cast<int>(Item::CompareOptions) + 1;
+constexpr int ItemCount = static_cast<int>(Item::HiddenItems) + 1;
 
 typedef bool Settings[OperationCount][ItemCount];
 

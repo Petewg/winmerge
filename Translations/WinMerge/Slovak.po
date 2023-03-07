@@ -68,6 +68,9 @@ msgstr "Vybrať riadky roz&dielov\tF4"
 msgid "Add this change to Substitution &Filters"
 msgstr "Pridá túto zmenu do položky &Filtre nahradenia"
 
+msgid "Add to &Line Filters"
+msgstr ""
+
 msgid "&Undo"
 msgstr "&Späť"
 
@@ -217,6 +220,45 @@ msgstr "Zmena mierky &vektorového obrázka"
 msgid "Compare Extracted &Text From Images"
 msgstr "Porovnať extrahovaný &text z obrázka"
 
+msgid "Co&mpare"
+msgstr "Po&rovnať"
+
+msgid "&Screenshots"
+msgstr ""
+
+msgid "&Full Size Screenshots"
+msgstr ""
+
+msgid "&HTMLs"
+msgstr ""
+
+msgid "&Texts"
+msgstr ""
+
+msgid "&Resource Trees"
+msgstr ""
+
+msgid "&Size"
+msgstr ""
+
+msgid "Fit to Window"
+msgstr ""
+
+msgid "Clear &Browsing Data"
+msgstr ""
+
+msgid "&Disk Cache"
+msgstr ""
+
+msgid "&Cookies"
+msgstr ""
+
+msgid "&Browsing History"
+msgstr ""
+
+msgid "&All Profile"
+msgstr ""
+
 msgid "&File"
 msgstr "&Súbor"
 
@@ -234,6 +276,9 @@ msgstr "&Binárne"
 
 msgid "&Image"
 msgstr "&Obrázok"
+
+msgid "&Webpage"
+msgstr ""
 
 msgid "New (&3 panes)"
 msgstr "Nový (&3 panely)"
@@ -888,6 +933,9 @@ msgstr "Kopírovať názvy &súborov"
 msgid "Copy Items To Clip&board"
 msgstr "Kopírovať položky do &schránky"
 
+msgid "Copy All Di&splayed Columns"
+msgstr ""
+
 msgid "&Zip"
 msgstr "&Zbaliť ZIP"
 
@@ -920,6 +968,12 @@ msgstr "&Kopírovať plnú cestu"
 
 msgid "Copy &Filename"
 msgstr "Kopírovať názov &súboru"
+
+msgid "&Edit Caption"
+msgstr ""
+
+msgid "&Open..."
+msgstr ""
 
 msgid "Unpacker Settings"
 msgstr "Nastavenia rozbaľovača"
@@ -1056,14 +1110,14 @@ msgstr "Prehľadávať..."
 msgid " Folder: Filter"
 msgstr " Priečinok: Filter"
 
+msgid " File: Prediffer Plugin"
+msgstr ""
+
 msgid " File: Unpacker Plugin"
 msgstr " File: Rozšírenie rozbaľovača"
 
 msgid "Se&lect..."
 msgstr "Vy&brať..."
-
-msgid "Co&mpare"
-msgstr "Po&rovnať"
 
 msgid "Cancel"
 msgstr "Zrušiť"
@@ -1106,6 +1160,9 @@ msgstr "Kliknutím na tlačidlo Porovnať zatvoriť dialógové okno „Vybrať 
 
 msgid "Op&en-dialog Auto-Completion:"
 msgstr "Automatické dopĺňanie v dialógu &Otvoriť:"
+
+msgid "Auto-&reload modified files:"
+msgstr ""
 
 msgid "Language:"
 msgstr "Jazyk:"
@@ -1874,11 +1931,14 @@ msgstr "Integrácia prostredia"
 msgid "Explorer"
 msgstr "Prieskumník"
 
+msgid "&Add to context menu"
+msgstr "Prid&ať do ponuky súvislosti"
+
 msgid "E&nable advanced menu"
 msgstr "Po&voliť rozšírenú ponuku"
 
-msgid "&Add to context menu"
-msgstr "Prid&ať do ponuky súvislosti"
+msgid "Enable &Compare As menu"
+msgstr ""
 
 msgid "&Register shell extension"
 msgstr "Za&registrovať rozšírenie prostredia"
@@ -1923,12 +1983,8 @@ msgstr "Prahová hodnota pre prepnutie pre &rýchle porovnanie (MB):"
 msgid "Threshold for switching to &binary compare (MB):"
 msgstr "Prahová hodnota pre prepnutie na &binárne porovnanie (MB):"
 
-msgid ""
-"\n"
-"&Number of compare threads (a negative value implies addition of the number of available CPU cores):"
+msgid "&Number of CPU cores to use:"
 msgstr ""
-"\n"
-"&Počet porovnávaných vlákien (záporná hodnota znamená pridanie počtu dostupných jadier CPU):"
 
 msgid "&CSV File Patterns:"
 msgstr "Vzory súborov &CSV:"
@@ -1972,6 +2028,21 @@ msgstr "&Povoliť porovnanie obrázkov pri porovnaní priečinkov"
 
 msgid "OCR result:"
 msgstr "Výsledok OCR:"
+
+msgid "Webpage"
+msgstr ""
+
+msgid "URL pattern to &include (Regular expression):"
+msgstr ""
+
+msgid "URL pattern to &exclude (Regular expression):"
+msgstr ""
+
+msgid "&User data folder location:"
+msgstr ""
+
+msgid "&Separate user data folders for each pane"
+msgstr ""
 
 msgid "&Hex View"
 msgstr "Zobraziť &hexadecimálne"
@@ -2230,6 +2301,9 @@ msgstr "Zahrnúť podpriečinky"
 
 msgid "Compare Options"
 msgstr "Možnosti porovnania"
+
+msgid "Hidden Items"
+msgstr ""
 
 msgid "Name"
 msgstr "Názov"
@@ -2783,6 +2857,9 @@ msgstr "Potvrdiť presun"
 msgid "You are about to close the window that is comparing folders. Are you sure you want to close the window?"
 msgstr "Chystáte sa zavrieť okno s porovnaním priečinkov. Naozaj chcete zavrieť okno?"
 
+msgid "The file or folder name is invalid."
+msgstr ""
+
 #, c-format
 msgid "Failed to execute external editor: %1"
 msgstr "Nepodarilo sa spustiť externý editor: %1"
@@ -3183,6 +3260,10 @@ msgstr "Názov rozšírenia predbežného spracovateľa rozdielov alebo potrubia
 #, c-format
 msgid "Compare %1 with %2"
 msgstr "Porovnať %1 s %2"
+
+#, c-format
+msgid "Compare %1 with %2 and %3"
+msgstr ""
 
 msgid "Comma-separated list"
 msgstr "Zoznam oddelený čiarkami"
@@ -3661,6 +3742,9 @@ msgstr "Zavrieť ďa&lšie karty"
 msgid "Enable &Auto Max Width"
 msgstr "Povoliť &automaticky maximalizovať šírku"
 
+msgid "We&bpage"
+msgstr ""
+
 msgid "Frhed is not installed."
 msgstr "Frhed nie je nainštalovaný."
 
@@ -3691,6 +3775,9 @@ msgstr "trpezlivosť"
 
 msgid "histogram"
 msgstr "histogram"
+
+msgid "none"
+msgstr ""
 
 msgid "GDI"
 msgstr "GDI"
@@ -3845,11 +3932,23 @@ msgstr "Pozícia po riadkoch a text"
 msgid "Word-by-word position and text"
 msgstr "Pozícia a text po slovách"
 
+msgid "AppData folder"
+msgstr ""
+
+msgid "Install folder"
+msgstr ""
+
 msgid "Allow only one instance to run"
 msgstr "Povoliť spustenie iba jednej inštancie"
 
 msgid "Allow only one instance to run and wait for the instance to terminate"
 msgstr "Povolí spustenie iba jednej inštancie a počká, kým sa inštancia ukončí"
+
+msgid "Only on window activated"
+msgstr ""
+
+msgid "Immediately"
+msgstr ""
 
 msgid "Al&l"
 msgstr "Al&l"
@@ -3860,8 +3959,8 @@ msgstr "Prikrášlenie"
 msgid "Content Extraction"
 msgstr "Rozbalenie obsahu"
 
-msgid "Visualization"
-msgstr "Vizualizácia"
+msgid "Preview"
+msgstr ""
 
 msgid "Data Query"
 msgstr "Vyhľadávanie údajov"
@@ -3956,8 +4055,14 @@ msgstr "Skrášliť XML"
 msgid "Prettify YAML"
 msgstr "Skrášliť YAML"
 
-msgid "Visualize Graphviz"
-msgstr "Vizualizácia zobrazenia grafov"
+msgid "Preview Graphviz"
+msgstr ""
+
+msgid "Preview Markdown"
+msgstr ""
+
+msgid "Preview PlantUML"
+msgstr ""
 
 msgid "Query CSV Data..."
 msgstr "Vyhľadávanie údajov CSV..."
@@ -4123,12 +4228,14 @@ msgstr ""
 "YAML skrášlené príkazom yq\r\n"
 "Argumenty: Možnosti filtra alebo príkazového riadka odovzdané príkazu yq."
 
-msgid ""
-"Graphviz Visualizer. \r\n"
-"Arguments: Command line options passed to the dot command."
+msgid "Graphviz Previewer. \r\nArguments: Command line options passed to the dot command."
 msgstr ""
-"Vizualizér zobrazenia grafov\r\n"
-"Argumenty: Možnosti príkazového riadku odovzdané príkazu dot."
+
+msgid "Markdown Previewer. \r\nArguments: Command line options passed to the md2html command."
+msgstr ""
+
+msgid "PlantUML Previewer. \r\nArguments: Command line options passed to the plantuml.jar command."
+msgstr ""
 
 msgid ""
 "CSV Querier with q command. \r\n"
@@ -4248,3 +4355,6 @@ msgstr "Tento systém nepodporuje históriu schránky."
 
 msgid "The 32-bit version of WinMerge does not support Clipboard Compare"
 msgstr "32-bitová verzia WinMerge nepodporuje porovnávanie schránky"
+
+msgid "WebView2 runtime is not installed. Do you want to download it?"
+msgstr ""

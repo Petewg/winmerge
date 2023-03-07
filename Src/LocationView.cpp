@@ -33,8 +33,6 @@ using std::vector;
 
 /** @brief Size of empty frame above and below bars (in pixels). */
 static const int Y_OFFSET = 5;
-/** @brief Size of y-margin for visible area indicator (in pixels). */
-static const long INDICATOR_MARGIN = 2;
 /** @brief Max pixels in view per line in file. */
 static const double MAX_LINEPIX = 4.0;
 /** @brief Top of difference marker, relative to difference start. */
@@ -91,6 +89,7 @@ BEGIN_MESSAGE_MAP(CLocationView, CView)
 	ON_WM_LBUTTONUP()
 	ON_WM_MOUSEMOVE()
 	ON_WM_MOUSEACTIVATE()
+	ON_WM_MOUSEWHEEL()
 	ON_WM_LBUTTONDBLCLK()
 	ON_WM_CONTEXTMENU()
 	ON_WM_CLOSE()
@@ -406,7 +405,6 @@ void CLocationView::OnDraw(CDC* pDC)
 	CBrush* oldBrush = (CBrush*)dc.SelectObject(&brush);
 	for (int pane = 0; pane < pDoc->m_nBuffers; pane++)
 	{
-		int nBottom = (int)(m_lineInPix * pDoc->GetView(nGroup, pane)->GetSubLineCount() + Y_OFFSET + 1);
 		CBrush *pOldBrush = nullptr;
 		if (pDoc->IsEditedAfterRescan(pane))
 			pOldBrush = (CBrush *)dc.SelectStockObject(HOLLOW_BRUSH);
@@ -636,6 +634,15 @@ void CLocationView::OnMouseMove(UINT nFlags, CPoint point)
 int  CLocationView::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
 {
 	return MA_NOACTIVATE;
+}
+
+BOOL CLocationView::OnMouseWheel(UINT nFlags, short zDelta, CPoint pt)
+{
+	CMergeEditView* pView = GetDocument()->GetActiveMergeView();
+	if (pView)
+		return static_cast<BOOL>(pView->SendMessage(WM_MOUSEWHEEL,
+			MAKEWPARAM(nFlags, zDelta), MAKELPARAM(pt.x, pt.y)));
+	return CView::OnMouseWheel(nFlags, zDelta, pt);
 }
 
 /**

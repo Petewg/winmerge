@@ -13,6 +13,7 @@ ComboEx32
 Version 1.0
 WinMerge
 ../Version.h
+ABAP
 ASP
 AutoIt
 Basic
@@ -84,3 +85,10 @@ CRLF
 &1:
 &2:
 &BOM
+x
+320x512
+375x600
+1024x640
+1280x800
+1440x900
+UA:

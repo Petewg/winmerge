@@ -32,6 +32,7 @@
 #include "editcmd.h"
 #include "Shell.h"
 #include "SelectPluginDlg.h"
+#include "Constants.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -48,9 +49,6 @@ using CrystalLineParser::TEXTBLOCK;
 const UINT IDT_RESCAN = 2;
 /** @brief Timer timeout for delayed rescan. */
 const UINT RESCAN_TIMEOUT = 1000;
-
-/** @brief Location for file compare specific help to open. */
-static TCHAR MergeViewHelpLocation[] = _T("::/htmlhelp/Compare_files.html");
 
 /////////////////////////////////////////////////////////////////////////////
 // CMergeEditView
@@ -209,8 +207,7 @@ BEGIN_MESSAGE_MAP(CMergeEditView, CCrystalEditViewEx)
 	ON_COMMAND_RANGE(ID_SCRIPT_FIRST, ID_SCRIPT_LAST, OnScripts)
 	ON_COMMAND(ID_TRANSFORM_WITH_SCRIPT, OnTransformWithScript)
 	// [Window] menu
-	ON_COMMAND(ID_WINDOW_CHANGE_PANE, OnChangePane)
-	ON_COMMAND(ID_NEXT_PANE, OnChangePane)
+	ON_COMMAND_RANGE(ID_NEXT_PANE, ID_PREV_PANE, OnChangePane)
 	ON_COMMAND(ID_WINDOW_SPLIT, OnWindowSplit)
 	ON_UPDATE_COMMAND_UI(ID_WINDOW_SPLIT, OnUpdateWindowSplit)
 	// [Help] menu
@@ -218,6 +215,8 @@ BEGIN_MESSAGE_MAP(CMergeEditView, CCrystalEditViewEx)
 	// Context menu
 	ON_COMMAND(ID_ADD_TO_IGNORED_SUBSTITUTIONS, OnAddToSubstitutionFilters)
 	ON_UPDATE_COMMAND_UI(ID_ADD_TO_IGNORED_SUBSTITUTIONS, OnUpdateAddToSubstitutionFilters)
+	ON_COMMAND(ID_ADD_TO_LINE_FILTERS, OnAddToLineFilters)
+	ON_UPDATE_COMMAND_UI(ID_ADD_TO_LINE_FILTERS, OnUpdateAddToLineFilters)
 	ON_COMMAND(ID_GOTO_MOVED_LINE_LM, OnGotoMovedLineLM)
 	ON_UPDATE_COMMAND_UI(ID_GOTO_MOVED_LINE_LM, OnUpdateGotoMovedLineLM)
 	ON_COMMAND(ID_GOTO_MOVED_LINE_MR, OnGotoMovedLineMR)
@@ -233,7 +232,7 @@ BEGIN_MESSAGE_MAP(CMergeEditView, CCrystalEditViewEx)
 	ON_UPDATE_COMMAND_UI(ID_USE_FIRST_LINE_AS_HEADERS, OnUpdateUseFirstLineAsHeaders)
 	ON_COMMAND(ID_AUTO_FIT_ALL_COLUMNS, OnAutoFitAllColumns)
 	// Status bar
-	ON_NOTIFY(NM_DBLCLK, AFX_IDW_STATUS_BAR, OnStatusBarDblClick)
+	ON_NOTIFY(NM_CLICK, AFX_IDW_STATUS_BAR, OnStatusBarClick)
 	ON_UPDATE_COMMAND_UI(ID_STATUS_PANE0FILE_EOL, OnUpdateStatusEOL)
 	ON_UPDATE_COMMAND_UI(ID_STATUS_PANE1FILE_EOL, OnUpdateStatusEOL)
 	ON_UPDATE_COMMAND_UI(ID_STATUS_PANE2FILE_EOL, OnUpdateStatusEOL)
@@ -449,7 +448,9 @@ void CMergeEditView::GetFullySelectedDiffs(int & firstDiff, int & lastDiff, int 
 		else if (ptStart != ptEnd)
 		{
 			VERIFY(pd->m_diffList.GetDiff(firstDiff, di));
-			if (lastLineIsNotInDiff && (firstLineIsNotInDiff || (di.dbegin == firstLine && ptStart.x == 0)))
+			constexpr int LineLimit = 256;
+			if ((lastLineIsNotInDiff && (firstLineIsNotInDiff || (di.dbegin == firstLine && ptStart.x == 0))) ||
+			    (di.dend - di.dbegin > LineLimit))
 			{
 				firstWordDiff = -1;
 				return;
@@ -463,7 +464,7 @@ void CMergeEditView::GetFullySelectedDiffs(int & firstDiff, int & lastDiff, int 
 					int worddiffLen = worddiffs[i].end[m_nThisPane] - worddiffs[i].begin[m_nThisPane];
 					if (worddiffs[i].endline[m_nThisPane] > firstLine ||
 						(firstLine == worddiffs[i].endline[m_nThisPane] && 
-						 worddiffs[i].end[m_nThisPane] - (worddiffLen == 0 ? 0 : 1) >= ptStart.x))
+						 worddiffs[i].end[m_nThisPane] - (worddiffLen == 0 ? 0 : 1) > ptStart.x))
 					{
 						firstWordDiff = static_cast<int>(i);
 						break;
@@ -598,7 +599,9 @@ void CMergeEditView::OnInitialUpdate()
 	PushCursors();
 	CCrystalEditViewEx::OnInitialUpdate();
 	PopCursors();
-	SetFont(dynamic_cast<CMainFrame*>(AfxGetMainWnd())->m_lfDiff);
+	LOGFONT lf = dynamic_cast<CMainFrame*>(AfxGetMainWnd())->m_lfDiff;
+	lf.lfHeight = static_cast<LONG>(lf.lfHeight * GetOptionsMgr()->GetInt(OPT_VIEW_ZOOM) / 1000.0);
+	SetFont(lf);
 	SetAlternateDropTarget(new DropHandler(std::bind(&CMergeEditView::OnDropFiles, this, std::placeholders::_1)));
 
 	m_lineBegin = 0;
@@ -679,7 +682,7 @@ std::vector<TEXTBLOCK> CMergeEditView::GetAdditionalTextBlocks (int nLineIndex)
 			else if (m_nThisPane == 2 && worddiffs[i].op == OP_1STONLY)
 				continue;
 		}
-		int begin[3], end[3];
+		int begin[3]{}, end[3]{};
 		bool deleted = false;
 		for (int pane = 0; pane < pDoc->m_nBuffers; pane++)
 		{
@@ -2019,17 +2022,10 @@ void CMergeEditView::OnUpdateX2Y(CCmdUI* pCmdUI)
 		auto [ptStart, ptEnd] = GetSelection();
 		if (IsSelection() || GetDocument()->EqualCurrentWordDiff(m_nThisPane, ptStart, ptEnd))
 		{
-			if (m_bCurrentLineIsDiff || (m_pTextBuffer->GetLineFlags(m_ptSelStart.y) & LF_NONTRIVIAL_DIFF) != 0)
-			{
-				pCmdUI->Enable(true);
-			}
-			else
-			{
-				int firstDiff, lastDiff;
-				GetFullySelectedDiffs(firstDiff, lastDiff);
+			int firstDiff, lastDiff, firstWordDiff, lastWordDiff;
+			GetFullySelectedDiffs(firstDiff, lastDiff, firstWordDiff, lastWordDiff);
 
-				pCmdUI->Enable(firstDiff != -1 && lastDiff != -1 && (lastDiff >= firstDiff));
-			}
+			pCmdUI->Enable((firstDiff != -1 && lastDiff != -1) || (firstWordDiff != -1 && lastWordDiff != -1));
 		}
 		else
 		{
@@ -2183,7 +2179,7 @@ void CMergeEditView::OnAllLeft()
 void CMergeEditView::OnUpdateAllLeft(CCmdUI* pCmdUI)
 {
 	// Check that left side is not readonly
-	auto [srcPane, dstPane] = CMergeFrameCommon::MenuIDtoXY(pCmdUI->m_nID, m_nThisPane, GetDocument()->m_nBuffers);
+	[[maybe_unused]] auto [srcPane, dstPane] = CMergeFrameCommon::MenuIDtoXY(pCmdUI->m_nID, m_nThisPane, GetDocument()->m_nBuffers);
 	if (!IsReadOnly(dstPane))
 		pCmdUI->Enable(GetDocument()->m_diffList.HasSignificantDiffs());
 	else
@@ -2213,7 +2209,7 @@ void CMergeEditView::OnAllRight()
 void CMergeEditView::OnUpdateAllRight(CCmdUI* pCmdUI)
 {
 	// Check that right side is not readonly
-	auto [srcPane, dstPane] = CMergeFrameCommon::MenuIDtoXY(pCmdUI->m_nID, m_nThisPane, GetDocument()->m_nBuffers);
+	[[maybe_unused]] auto [srcPane, dstPane] = CMergeFrameCommon::MenuIDtoXY(pCmdUI->m_nID, m_nThisPane, GetDocument()->m_nBuffers);
 	if (!IsReadOnly(dstPane))
 		pCmdUI->Enable(GetDocument()->m_diffList.HasSignificantDiffs());
 	else
@@ -2278,7 +2274,7 @@ void CMergeEditView::OnUpdateClearSyncPoints(CCmdUI* pCmdUI)
  * @sa CCrystalEditView::OnEditOperation()
  * @todo More edit-events for rescan delaying?
  */
-void CMergeEditView::OnEditOperation(int nAction, LPCTSTR pszText, size_t cchText)
+void CMergeEditView::OnEditOperation(int nAction, const tchar_t* pszText, size_t cchText)
 {
 	if (!QueryEditable())
 	{
@@ -2708,6 +2704,38 @@ void CMergeEditView::OnUpdateAddToSubstitutionFilters(CCmdUI* pCmdUI)
 	pCmdUI->Enable(GetDocument()->m_nBuffers == 2 && !GetDocument()->IsEditedAfterRescan());
 }
 
+void CMergeEditView::OnAddToLineFilters()
+{
+	// Pass this to the document, to compare this file to other
+	CMergeDoc* pDoc = GetDocument();
+	auto [ptSelStart, ptSelEnd] = GetSelection();
+
+	// Nothing selected
+	if (ptSelStart == ptSelEnd)
+		return;
+
+	CString text;
+
+	if (!m_bRectangularSelection)
+	{
+		CDiffTextBuffer* buffer = pDoc->m_ptBuf[m_nThisPane].get();
+
+		buffer->GetTextWithoutEmptys(ptSelStart.y, ptSelStart.x,
+			ptSelEnd.y, ptSelEnd.x, text);
+	}
+	else
+		GetTextWithoutEmptysInColumnSelection(text);
+
+	CMergeDoc* pd = GetDocument();
+	pd->AddToLineFilters(text.GetString());
+	pd->FlushAndRescan(true);
+}
+
+void CMergeEditView::OnUpdateAddToLineFilters(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(IsSelection() && GetDocument()->m_nBuffers == 2 && !GetDocument()->IsEditedAfterRescan());
+}
+
 /**
  * @brief Enable/disable Replace-menuitem
  */
@@ -2796,7 +2824,7 @@ void CMergeEditView::OnContextMenu(CWnd* pWnd, CPoint point)
 	else if (nBuffers == 3 && m_nThisPane == 2)
 		menu.RemoveMenu(ID_GOTO_MOVED_LINE_LM, MF_BYCOMMAND);
 
-	VERIFY(menu.LoadToolbar(IDR_MAINFRAME));
+	VERIFY(menu.LoadToolbar(IDR_MAINFRAME, GetMainFrame()->GetToolbar()));
 	theApp.TranslateMenu(menu.m_hMenu);
 
 	BCMenu *pSub = static_cast<BCMenu *>(menu.GetSubMenu(0));
@@ -2938,7 +2966,7 @@ void CMergeEditView::OnUpdateR2LNext(CCmdUI* pCmdUI)
  * active pane but we could be smarter too? Maybe update cursor
  * only when it is not visible in new pane?
  */
-void CMergeEditView::OnChangePane()
+void CMergeEditView::OnChangePane(UINT nID)
 {
 	CSplitterWnd *pSplitterWnd = GetParentSplitter(this, false);
 	CMergeEditView *pWnd = static_cast<CMergeEditView*>(pSplitterWnd->GetActivePane());
@@ -2947,6 +2975,9 @@ void CMergeEditView::OnChangePane()
 	CMergeEditView *pNextActiveView = nullptr;
 	std::vector<CMergeEditView *> list = pDoc->GetViewList();
 	list.insert(list.end(), list.begin(), list.end());
+	if (nID == ID_PREV_PANE)
+		std::reverse(list.begin(), list.end());
+
 	for (auto& pView : list)
 	{
 		if (bFound && pView->m_bDetailView == pWnd->m_bDetailView)
@@ -3167,7 +3198,7 @@ void CMergeEditView::OnShellMenu()
 	pFrame->m_bAutoMenuEnable = FALSE;
 
 	String path = GetDocument()->m_filePaths[m_nThisPane];
-	std::unique_ptr<CShellContextMenu> pContextMenu(new CShellContextMenu(0x9000, 0x9FFF));
+	auto pContextMenu = std::make_unique<CShellContextMenu>(CShellContextMenu(0x9000, 0x9FFF));
 	pContextMenu->Initialize();
 	pContextMenu->AddItem(paths::GetParentPath(path), paths::FindFileName(path));
 	pContextMenu->RequeryShellContextMenu();
@@ -3374,8 +3405,7 @@ void CMergeEditView::OnVScroll(UINT nSBCode, UINT nPos, CScrollBar *pScrollBar)
 		return;
 
 	// Note we cannot use nPos because of its 16-bit nature
-	SCROLLINFO si = {0};
-	si.cbSize = sizeof (si);
+	SCROLLINFO si{ sizeof(si) };
 	si.fMask = SIF_PAGE | SIF_POS | SIF_RANGE | SIF_TRACKPOS;
 	VERIFY (GetScrollInfo (SB_VERT, &si));
 
@@ -3414,7 +3444,7 @@ void CMergeEditView::OnEditCopyLineNumbers()
 		CString sSpaces(' ', static_cast<int>(nNumWidth - strutils::to_str(line + 1).length()));
 		
 		strText += sSpaces;
-		strNumLine.Format(_T("%d: %s"), line + 1, (LPCTSTR)strLine);
+		strNumLine.Format(_T("%d: %s"), line + 1, (const tchar_t*)strLine);
 		strText += strNumLine;
  	}
 	PutToClipboard(strText, strText.GetLength(), m_bRectangularSelection);
@@ -3704,7 +3734,7 @@ void CMergeEditView::OnPrint(CDC* pDC, CPrintInfo* pInfo)
 	CSize sz = rDraw.Size();
 	CMergeDoc *pDoc = GetDocument();
 
-	SIZE szLeftTop, szRightBottom;
+	SIZE szLeftTop{}, szRightBottom{};
 	GetPrintMargins(szLeftTop.cx, szLeftTop.cy, szRightBottom.cx, szRightBottom.cy);
 	pDC->HIMETRICtoLP(&szLeftTop);
 	pDC->HIMETRICtoLP(&szRightBottom);
@@ -3745,7 +3775,7 @@ int CMergeEditView::GetEmptySubLines( int nLineIndex )
 				return 0;
 			pView->WrapLineCached( nLineIndex, pView->GetScreenChars(), nullptr, nBreaks[nPane] );
 		}
-		nMaxBreaks = max(nMaxBreaks, nBreaks[nPane]);
+		nMaxBreaks = (std::max)(nMaxBreaks, nBreaks[nPane]);
 	}
 
 	if (nBreaks[m_nThisPane] < nMaxBreaks)
@@ -3987,7 +4017,7 @@ void CMergeEditView::OnUpdateViewChangeScheme(CCmdUI *pCmdUI)
 	for (int i = ID_COLORSCHEME_FIRST + 1, j = 0; i <= ID_COLORSCHEME_LAST; ++i, ++j)
 	{
 		name = theApp.LoadString(i);
-		AppendMenu(hSubMenu, MF_STRING | ((j % 21) == 20) ? MF_MENUBREAK : 0, i, name.c_str());
+		AppendMenu(hSubMenu, MF_STRING | (((j % 22) == 21) ? MF_MENUBREAK : 0), i, name.c_str());
 	}
 
 	pCmdUI->Enable(true);
@@ -4091,12 +4121,12 @@ void CMergeEditView::ZoomText(short amount)
 	const int nLogPixelsY = CClientDC(this).GetDeviceCaps(LOGPIXELSY);
 	int nPointSize = -MulDiv(lf.lfHeight, 72, nLogPixelsY);
 
+	int nOrgPointSize = GetOptionsMgr()->GetInt(OPT_FONT_FILECMP + OPT_FONT_POINTSIZE);
+	if (nOrgPointSize ==  0)
+		nOrgPointSize = -MulDiv(GetOptionsMgr()->GetInt(OPT_FONT_FILECMP + OPT_FONT_HEIGHT), 72, nLogPixelsY);
+
 	if ( amount == 0)
-	{
-		nPointSize = GetOptionsMgr()->GetInt(OPT_FONT_FILECMP + OPT_FONT_POINTSIZE);
-		if (nPointSize ==  0)
-			nPointSize = -MulDiv(GetOptionsMgr()->GetInt(OPT_FONT_FILECMP + OPT_FONT_HEIGHT), 72, nLogPixelsY);
-	}
+		nPointSize = nOrgPointSize;
 
 	nPointSize += amount;
 	if (nPointSize < 2)
@@ -4120,6 +4150,8 @@ void CMergeEditView::ZoomText(short amount)
 			}
 		}
 	}
+
+	GetOptionsMgr()->SaveOption(OPT_VIEW_ZOOM, nPointSize * 1000 / nOrgPointSize);
 }
 
 bool CMergeEditView::QueryEditable()
@@ -4286,8 +4318,6 @@ void CMergeEditView::OnWindowSplit()
 
 	auto& wndSplitter = dynamic_cast<CMergeEditFrame *>(GetParentFrame())->GetSplitter();
 	CMergeDoc *pDoc = GetDocument();
-	CMergeEditView *pView = pDoc->GetView(0, m_nThisPane);
-	auto* pwndSplitterChild = pView->GetParentSplitter(pView, false);
 	int nBuffer = m_nThisPane;
 	if (pDoc->m_nGroups <= 2)
 	{
@@ -4308,7 +4338,7 @@ void CMergeEditView::OnUpdateWindowSplit(CCmdUI* pCmdUI)
 	pCmdUI->SetCheck(GetDocument()->m_nGroups > 2);
 }
 
-void CMergeEditView::OnStatusBarDblClick(NMHDR* pNMHDR, LRESULT* pResult)
+void CMergeEditView::OnStatusBarClick(NMHDR* pNMHDR, LRESULT* pResult)
 {
 	*pResult = 0;
 	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);

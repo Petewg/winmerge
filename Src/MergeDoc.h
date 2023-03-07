@@ -121,7 +121,7 @@ class CMergeEditSplitterView;
 class CMergeDoc : public CDocument, public IMergeDoc
 {
 public:
-	struct TableProps { bool istable; TCHAR delimiter; TCHAR quote; bool allowNewlinesInQuotes; };
+	struct TableProps { bool istable; tchar_t delimiter; tchar_t quote; bool allowNewlinesInQuotes; };
 // Attributes
 public:
 	static int m_nBuffersTemp;
@@ -173,8 +173,8 @@ public:
 	bool ListCopy(int srcPane, int dstPane, int nDiff = -1, bool bGroupWithPrevious = false, bool bUpdateView = true);
 	bool TrySaveAs(String& strPath, int &nLastErrorCode, String & sError,
 		int nBuffer, PackingInfo& infoTempUnpacker);
-	bool DoSave(LPCTSTR szPath, bool &bSaveSuccess, int nBuffer);
-	bool DoSaveAs(LPCTSTR szPath, bool &bSaveSuccess, int nBuffer);
+	bool DoSave(const tchar_t* szPath, bool &bSaveSuccess, int nBuffer);
+	bool DoSaveAs(const tchar_t* szPath, bool &bSaveSuccess, int nBuffer);
 	int RightLineInMovedBlock(int pane, int line);
 	int LeftLineInMovedBlock(int pane, int line);
 	void SetEditedAfterRescan(int nBuffer);
@@ -243,7 +243,8 @@ public:
 	void ClearSyncPoints();
 	bool HasSyncPoints();
 	std::vector<std::vector<int> > GetSyncPointList();
-	String GetDescription(int pane) const { return m_strDesc[pane]; }
+	String GetDescription(int pane) const override { return m_strDesc[pane]; }
+	void SetDescription(int pane, const String& sText) { m_strDesc[pane] = sText; }
 
 	// Overrides
 	// ClassWizard generated virtual function overrides
@@ -261,6 +262,7 @@ public:
 	typedef enum { BYTEDIFF, WORDDIFF } DIFFLEVEL;
 	void Showlinediff(CMergeEditView *pView, bool bReversed = false);
 	void AddToSubstitutionFilters(CMergeEditView* pView, bool bReversed = false);
+	void AddToLineFilters(const String& text);
 	std::vector<WordDiff> GetWordDiffArrayInDiffBlock(int nDiff);
 	std::vector<WordDiff> GetWordDiffArray(int nLineIndex);
 	std::vector<WordDiff> GetWordDiffArrayInRange(const int begin[3], const int end[3], int pane1 = -1, int pane2 = -1);
@@ -277,7 +279,7 @@ public:
 
 // Implementation
 public:
-	FileChange IsFileChangedOnDisk(LPCTSTR szPath, DiffFileInfo &dfi,
+	FileChange IsFileChangedOnDisk(const tchar_t* szPath, DiffFileInfo &dfi,
 		bool bSave, int nBuffer);
 	bool PromptAndSaveIfNeeded(bool bAllowCancel);
 	std::vector<int> undoTgt;
@@ -435,7 +437,7 @@ private:
 		const DIFFRANGE& diffrange, const DIFFOPTIONS& diffOptions);
 	void FlagTrivialLines();
 	void FlagMovedLines();
-	String GetFileExt(LPCTSTR sFileName, LPCTSTR sDescription) const;
+	String GetFileExt(const tchar_t* sFileName, const tchar_t* sDescription) const;
 	void DoFileSave(int pane);
 	void SetPredifferByMenu(UINT nID);
 };

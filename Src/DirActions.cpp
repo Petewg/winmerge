@@ -203,7 +203,8 @@ void ConfirmActionList(const CDiffContext& ctxt, const FileActionScript & action
 		break;
 
 	case FileAction::ACT_MOVE:
-		bDestIsSide = false;
+		if (item.UIResult == FileActionItem::UI_DEL)
+			bDestIsSide = false;
 		if (actionList.GetActionItemCount() == 1)
 		{
 			ThrowConfirmMove(ctxt, item.UIOrigin, item.UIDestination,
@@ -237,7 +238,8 @@ void ConfirmActionList(const CDiffContext& ctxt, const FileActionScript & action
  * @brief Update results for FileActionItem.
  * This functions is called to update DIFFITEM after FileActionItem.
  * @param [in] act Action that was done.
- * @param [in] pos List position for DIFFITEM affected.
+ * @param [in] ctxt Compare context: contains difflist, encoding info etc.
+ * @param [in,out] di Item to update the results.
  */
 UPDATEITEM_TYPE UpdateDiffAfterOperation(const FileActionItem & act, CDiffContext& ctxt, DIFFITEM &di)
 {
@@ -257,8 +259,16 @@ UPDATEITEM_TYPE UpdateDiffAfterOperation(const FileActionItem & act, CDiffContex
 		if (ctxt.GetCompareDirs() > 2)
 			SetDiffCompare(di, DIFFCODE::NOCMP);
 		else
-			SetDiffCompare(di, DIFFCODE::SAME);
+			UpdateCompareFlagsAfterSync(di, ctxt.m_bRecursive);
 		SetDiffCounts(di, 0, 0);
+		break;
+
+	case FileActionItem::UI_MOVE:
+		bUpdateSrc = true;
+		bUpdateDest = true;
+		CopyDiffSideAndProperties(di, act.UIOrigin, act.UIDestination);
+		UnsetDiffSide(di, act.UIOrigin);
+		SetDiffCompare(di, DIFFCODE::NOCMP);
 		break;
 
 	case FileActionItem::UI_DEL:
@@ -359,6 +369,17 @@ bool IsItemCopyable(const DIFFITEM &di, int index)
 	return true;
 }
 
+/// is it possible to move item to left ?
+bool IsItemMovable(const DIFFITEM &di, int index)
+{
+	// don't let them mess with error items
+	if (di.diffcode.isResultError()) return false;
+	// impossible if not existing
+	if (!di.diffcode.exists(index)) return false;
+	// everything else can be copied to other side
+	return true;
+}
+
 /// is it possible to delete item ?
 bool IsItemDeletable(const DIFFITEM &di, int index)
 {
@@ -437,53 +458,30 @@ bool AreItemsOpenable(const CDiffContext& ctxt, SELECTIONTYPE selectionType, con
 /// is it possible to compare these three items?
 bool AreItemsOpenable(const CDiffContext& ctxt, const DIFFITEM &di1, const DIFFITEM &di2, const DIFFITEM &di3, bool openableForDir /*= true*/)
 {
+	if (ctxt.GetCompareDirs() < 3)
+		return false;
+
 	String sLeftBasePath = ctxt.GetPath(0);
 	String sMiddleBasePath = ctxt.GetPath(1);
 	String sRightBasePath = ctxt.GetPath(2);
-	String sLeftPath1 = paths::ConcatPath(di1.getFilepath(0, sLeftBasePath), di1.diffFileInfo[0].filename);
-	String sLeftPath2 = paths::ConcatPath(di2.getFilepath(0, sLeftBasePath), di2.diffFileInfo[0].filename);
-	String sLeftPath3 = paths::ConcatPath(di3.getFilepath(0, sLeftBasePath), di3.diffFileInfo[0].filename);
-	String sMiddlePath1 = paths::ConcatPath(di1.getFilepath(1, sMiddleBasePath), di1.diffFileInfo[1].filename);
-	String sMiddlePath2 = paths::ConcatPath(di2.getFilepath(1, sMiddleBasePath), di2.diffFileInfo[1].filename);
-	String sMiddlePath3 = paths::ConcatPath(di3.getFilepath(1, sMiddleBasePath), di3.diffFileInfo[1].filename);
-	String sRightPath1 = paths::ConcatPath(di1.getFilepath(2, sRightBasePath), di1.diffFileInfo[2].filename);
-	String sRightPath2 = paths::ConcatPath(di2.getFilepath(2, sRightBasePath), di2.diffFileInfo[2].filename);
-	String sRightPath3 = paths::ConcatPath(di3.getFilepath(2, sRightBasePath), di3.diffFileInfo[2].filename);
-	// Must not be binary (unless archive)
-	if
-	(
-		(di1.diffcode.isBin() || di2.diffcode.isBin() || di3.diffcode.isBin())
-	&&!	(
-			HasZipSupport()
-		&&	(sLeftPath1.empty() || ArchiveGuessFormat(sLeftPath1))
-		&&	(sMiddlePath1.empty() || ArchiveGuessFormat(sMiddlePath1))
-		&&	(sLeftPath2.empty() || ArchiveGuessFormat(sLeftPath2))
-		&&	(sMiddlePath2.empty() || ArchiveGuessFormat(sMiddlePath2))
-		&&	(sLeftPath2.empty() || ArchiveGuessFormat(sLeftPath2))
-		&&	(sMiddlePath2.empty() || ArchiveGuessFormat(sMiddlePath2)) /* FIXME: */
-		)
-	)
-	{
-		return false;
-	}
 
 	// Must be both directory or neither
-	if (di1.diffcode.isDirectory() != di2.diffcode.isDirectory() && di1.diffcode.isDirectory() != di3.diffcode.isDirectory()) return false;
+	if (di1.diffcode.isDirectory() != di2.diffcode.isDirectory() || di1.diffcode.isDirectory() != di3.diffcode.isDirectory()) return false;
 
 	if (!openableForDir && di1.diffcode.isDirectory()) return false;
 
 	// Must be on different sides, or one on one side & one on both
-	if (di1.diffcode.exists(0) && di2.diffcode.exists(1) && di3.diffcode.exists(2))
+	if (di1.diffcode.isSideFirstOnly() && di2.diffcode.isSideSecondOnly() && di3.diffcode.isSideThirdOnly())
 		return true;
-	if (di1.diffcode.exists(0) && di2.diffcode.exists(2) && di3.diffcode.exists(1))
+	if (di1.diffcode.isSideFirstOnly() && di2.diffcode.isSideThirdOnly() && di3.diffcode.isSideSecondOnly())
 		return true;
-	if (di1.diffcode.exists(1) && di2.diffcode.exists(0) && di3.diffcode.exists(2))
+	if (di1.diffcode.isSideSecondOnly() && di2.diffcode.isSideFirstOnly() && di3.diffcode.isSideThirdOnly())
 		return true;
-	if (di1.diffcode.exists(1) && di2.diffcode.exists(2) && di3.diffcode.exists(0))
+	if (di1.diffcode.isSideSecondOnly() && di2.diffcode.isSideThirdOnly() && di3.diffcode.isSideFirstOnly())
 		return true;
-	if (di1.diffcode.exists(2) && di2.diffcode.exists(0) && di3.diffcode.exists(1))
+	if (di1.diffcode.isSideThirdOnly() && di2.diffcode.isSideFirstOnly() && di3.diffcode.isSideSecondOnly())
 		return true;
-	if (di1.diffcode.exists(2) && di2.diffcode.exists(1) && di3.diffcode.exists(0))
+	if (di1.diffcode.isSideThirdOnly() && di2.diffcode.isSideSecondOnly() && di3.diffcode.isSideFirstOnly())
 		return true;
 
 	// Allow to compare items if left & right path refer to same directory
@@ -494,6 +492,7 @@ bool AreItemsOpenable(const CDiffContext& ctxt, const DIFFITEM &di1, const DIFFI
 
 	return false;
 }
+
 /// is it possible to open item ?
 bool IsItemOpenableOn(const DIFFITEM &di, int index)
 {
@@ -634,7 +633,33 @@ bool IsShowable(const CDiffContext& ctxt, const DIFFITEM &di, const DirViewFilte
 				// result filters
 				if (di.diffcode.isResultSame() && !filter.show_identical)
 					return false;
-				if (di.diffcode.isResultDiff() && !filter.show_different)
+				bool bShowable = true;
+				if (ctxt.GetCompareDirs() < 3)
+				{
+					if (di.diffcode.isResultDiff() && !filter.show_different)
+						bShowable = false;
+				}
+				else
+				{
+					if ((di.diffcode.diffcode & DIFFCODE::COMPAREFLAGS3WAY) == DIFFCODE::DIFF1STONLY)
+					{
+						if (!filter.show_different_left_only)
+							bShowable = false;
+					}
+					else if ((di.diffcode.diffcode & DIFFCODE::COMPAREFLAGS3WAY) == DIFFCODE::DIFF2NDONLY)
+					{
+						if (!filter.show_different_middle_only)
+							bShowable = false;
+					}
+					else if ((di.diffcode.diffcode & DIFFCODE::COMPAREFLAGS3WAY) == DIFFCODE::DIFF3RDONLY)
+					{
+						if (!filter.show_different_right_only)
+							bShowable = false;
+					}
+					else if (di.diffcode.isResultDiff() && !filter.show_different)
+						bShowable = false;
+				}
+				if (!bShowable)
 				{
 					DIFFITEM *diffpos = ctxt.GetFirstChildDiffPosition(&di);
 					while (diffpos != nullptr)
@@ -855,110 +880,62 @@ bool GetOpenTwoItems(const CDiffContext& ctxt, SELECTIONTYPE selectionType, DIFF
 bool GetOpenThreeItems(const CDiffContext& ctxt, DIFFITEM *pos1, DIFFITEM *pos2, DIFFITEM *pos3, const DIFFITEM *pdi[3],
 	PathContext & paths, int & sel1, int & sel2, int & sel3, bool & isDir, int nPane[3], FileTextEncoding encoding[3], String& errmsg, bool openableForDir /*= true*/)
 {
+	assert(pos1 && pos2 && pos3 && ctxt.GetCompareDirs() > 2);
+
 	String pathLeft, pathMiddle, pathRight;
 
-	// FIXME:
 	for (int nIndex = 0; nIndex < 3; ++nIndex)
 		nPane[nIndex] = nIndex;
-	if (pos3 == 0)
-	{
-		// Two items selected, get their info
-		pdi[0] = &ctxt.GetDiffAt(pos1);
-		pdi[1] = &ctxt.GetDiffAt(pos2);
 
-		// Check for binary & side compatibility & file/dir compatibility
-		if (!::AreItemsOpenable(ctxt, *pdi[0], *pdi[1], *pdi[1], openableForDir) &&
-			!::AreItemsOpenable(ctxt, *pdi[0], *pdi[0], *pdi[1], openableForDir))
-		{
-			return false;
-		}
-		// Ensure that pdi[0] is on left (swap if needed)
-		if (pdi[0]->diffcode.exists(0) && pdi[0]->diffcode.exists(1) && pdi[1]->diffcode.exists(2))
-		{
-			pdi[2] = pdi[1];
-			pdi[1] = pdi[0];
-			sel3 = sel2;
-			sel2 = sel1;
-		}
-		else if (pdi[0]->diffcode.exists(0) && pdi[0]->diffcode.exists(2) && pdi[1]->diffcode.exists(1))
-		{
-			pdi[2] = pdi[0];
-			sel3 = sel1;
-		}
-		else if (pdi[0]->diffcode.exists(1) && pdi[0]->diffcode.exists(2) && pdi[1]->diffcode.exists(0))
-		{
-			std::swap(pdi[0], pdi[1]);
-			std::swap(sel1, sel2);
-			pdi[2] = pdi[1];
-			sel3 = sel2;
-		}
-		else if (pdi[1]->diffcode.exists(0) && pdi[1]->diffcode.exists(1) && pdi[0]->diffcode.exists(2))
-		{
-			std::swap(pdi[0], pdi[1]);
-			std::swap(sel1, sel2);
-			pdi[2] = pdi[1];
-			pdi[1] = pdi[0];
-			sel3 = sel2;
-			sel2 = sel1;
-		}
-		else if (pdi[1]->diffcode.exists(0) && pdi[1]->diffcode.exists(2) && pdi[0]->diffcode.exists(1))
-		{
-			std::swap(pdi[0], pdi[1]);
-			std::swap(sel1, sel2);
-			pdi[2] = pdi[0];
-			sel3 = sel1;
-		}
-		else if (pdi[1]->diffcode.exists(1) && pdi[1]->diffcode.exists(2) && pdi[0]->diffcode.exists(0))
-		{
-			pdi[2] = pdi[1];
-			sel3 = sel2;
-		}
+	// Three items selected, get their info
+	pdi[0] = &ctxt.GetDiffAt(pos1);
+	pdi[1] = &ctxt.GetDiffAt(pos2);
+	pdi[2] = &ctxt.GetDiffAt(pos3);
+
+	// Check for binary & side compatibility & file/dir compatibility
+	if (!::AreItemsOpenable(ctxt, *pdi[0], *pdi[1], *pdi[2], openableForDir))
+	{
+		return false;
 	}
-	else
+	// Ensure that pdi[0] is on left (swap if needed)
+	if (pdi[0]->diffcode.exists(0) && pdi[1]->diffcode.exists(1) && pdi[2]->diffcode.exists(2))
 	{
-		// Three items selected, get their info
-		pdi[0] = &ctxt.GetDiffAt(pos1);
-		pdi[1] = &ctxt.GetDiffAt(pos2);
-		pdi[2] = &ctxt.GetDiffAt(pos3);
-
-		// Check for binary & side compatibility & file/dir compatibility
-		if (!::AreItemsOpenable(ctxt, *pdi[0], *pdi[1], *pdi[2], openableForDir))
-		{
-			return false;
-		}
-		// Ensure that pdi[0] is on left (swap if needed)
-		if (pdi[0]->diffcode.exists(0) && pdi[1]->diffcode.exists(1) && pdi[2]->diffcode.exists(2))
-		{
-		}
-		else if (pdi[0]->diffcode.exists(0) && pdi[1]->diffcode.exists(2) && pdi[2]->diffcode.exists(1))
-		{
-			std::swap(pdi[1], pdi[2]);
-			std::swap(sel2, sel3);
-		}
-		else if (pdi[0]->diffcode.exists(1) && pdi[1]->diffcode.exists(0) && pdi[2]->diffcode.exists(2))
-		{
-			std::swap(pdi[0], pdi[1]);
-			std::swap(sel1, sel2);
-		}
-		else if (pdi[0]->diffcode.exists(1) && pdi[1]->diffcode.exists(2) && pdi[2]->diffcode.exists(0))
-		{
-			std::swap(pdi[0], pdi[2]);
-			std::swap(sel1, sel3);
-			std::swap(pdi[1], pdi[2]);
-			std::swap(sel2, sel3);
-		}
-		else if (pdi[0]->diffcode.exists(2) && pdi[1]->diffcode.exists(0) && pdi[2]->diffcode.exists(1))
-		{
-			std::swap(pdi[0], pdi[1]);
-			std::swap(sel1, sel2);
-			std::swap(pdi[1], pdi[2]);
-			std::swap(sel2, sel3);
-		}
-		else if (pdi[0]->diffcode.exists(2) && pdi[1]->diffcode.exists(1) && pdi[2]->diffcode.exists(0))
-		{
-			std::swap(pdi[0], pdi[2]);
-			std::swap(sel1, sel3);
-		}
+	}
+	else if (pdi[0]->diffcode.exists(0) && pdi[1]->diffcode.exists(2) && pdi[2]->diffcode.exists(1))
+	{
+		std::swap(pdi[1], pdi[2]);
+		std::swap(nPane[1], nPane[2]);
+		std::swap(sel2, sel3);
+	}
+	else if (pdi[0]->diffcode.exists(1) && pdi[1]->diffcode.exists(0) && pdi[2]->diffcode.exists(2))
+	{
+		std::swap(pdi[0], pdi[1]);
+		std::swap(nPane[0], nPane[1]);
+		std::swap(sel1, sel2);
+	}
+	else if (pdi[0]->diffcode.exists(1) && pdi[1]->diffcode.exists(2) && pdi[2]->diffcode.exists(0))
+	{
+		std::swap(pdi[0], pdi[2]);
+		std::swap(nPane[0], nPane[2]);
+		std::swap(sel1, sel3);
+		std::swap(pdi[1], pdi[2]);
+		std::swap(nPane[1], nPane[2]);
+		std::swap(sel2, sel3);
+	}
+	else if (pdi[0]->diffcode.exists(2) && pdi[1]->diffcode.exists(0) && pdi[2]->diffcode.exists(1))
+	{
+		std::swap(pdi[0], pdi[1]);
+		std::swap(nPane[0], nPane[1]);
+		std::swap(sel1, sel2);
+		std::swap(pdi[1], pdi[2]);
+		std::swap(nPane[1], nPane[2]);
+		std::swap(sel2, sel3);
+	}
+	else if (pdi[0]->diffcode.exists(2) && pdi[1]->diffcode.exists(1) && pdi[2]->diffcode.exists(0))
+	{
+		std::swap(pdi[0], pdi[2]);
+		std::swap(nPane[0], nPane[2]);
+		std::swap(sel1, sel3);
 	}
 
 	// Fill in pathLeft & & pathMiddle & pathRight
@@ -1119,6 +1096,9 @@ void CopyDiffSideAndProperties(DIFFITEM& di, int src, int dst)
 void UnsetDiffSide(DIFFITEM& di, int index)
 {
 	di.diffcode.diffcode &= ~(DIFFCODE::FIRST << index);
+	di.diffFileInfo[index].ClearPartial();
+	di.nidiffs = CDiffContext::DIFFS_UNKNOWN_QUICKCOMPARE;
+	di.nsdiffs = CDiffContext::DIFFS_UNKNOWN_QUICKCOMPARE;
 	if (di.HasChildren())
 	{
 		for (DIFFITEM* pdic = di.GetFirstChild(); pdic; pdic = pdic->GetFwdSiblingLink())
@@ -1167,6 +1147,79 @@ void UpdateStatusFromDisk(CDiffContext& ctxt, DIFFITEM& di, int index)
 	{
 		for (DIFFITEM* pdic = di.GetFirstChild(); pdic; pdic = pdic->GetFwdSiblingLink())
 			UpdateStatusFromDisk(ctxt, *pdic, index);
+	}
+}
+
+/**
+ * @brief Update compare flags recursively after sync.
+ * @param [in,out] di Item to update the compare flag.
+ * @param [in] bRecursive `true` if tree mode is on
+ * @return number of diff items
+ */
+int UpdateCompareFlagsAfterSync(DIFFITEM& di, bool bRecursive)
+{
+	// Do not update compare flags for filtered items.
+	if (di.diffcode.isResultFiltered())
+		return 0;
+
+	int res = 0;
+	if (di.HasChildren())
+	{
+		for (DIFFITEM* pdic = di.GetFirstChild(); pdic; pdic = pdic->GetFwdSiblingLink())
+		{
+			int ndiff = UpdateCompareFlagsAfterSync(*pdic, bRecursive);
+			if (ndiff > 0)
+			{
+				res += ndiff;
+			}
+		}
+
+		// Update compare flags for items that exist on both sides.
+		// (Do not update compare flags for items that exist on only one side.)
+		if (di.diffcode.existAll())
+		{
+			di.diffcode.diffcode &= (~DIFFCODE::COMPAREFLAGS);
+			unsigned flag = (res > 0) ? DIFFCODE::DIFF : DIFFCODE::SAME;
+			di.diffcode.diffcode |= flag;
+		}
+	}
+	else {
+		// Update compare flags for files and directories in tree mode.
+		// (Do not update directory compare flags when not in tree mode.)
+		if (!di.diffcode.isDirectory() || bRecursive)
+		{
+			if (di.diffcode.existAll())
+			{
+				di.diffcode.diffcode &= (~DIFFCODE::COMPAREFLAGS);
+				di.diffcode.diffcode |= DIFFCODE::SAME;
+			}
+			else
+			{
+				res++;
+			}
+		}
+	}
+
+	return res;
+}
+
+/**
+ * @brief Update the paths of the diff items recursively.
+ * @param[in] nDirs Number of directories to compare.
+ * @param[in,out] di@Item to update the path.
+ */
+void UpdatePaths(int nDirs, DIFFITEM& di)
+{
+	assert(nDirs == 2 || nDirs == 3);
+
+	if (di.HasChildren())
+	{
+		for (DIFFITEM* pdic = di.GetFirstChild(); pdic; pdic = pdic->GetFwdSiblingLink())
+		{
+			for (int i = 0; i < nDirs; i++)
+				pdic->diffFileInfo[i].path = paths::ConcatPath(di.diffFileInfo[i].path, di.diffFileInfo[i].filename);
+			UpdatePaths(nDirs, *pdic);
+		}
 	}
 }
 

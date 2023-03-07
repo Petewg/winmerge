@@ -95,7 +95,7 @@ public:
 	void RefreshOptions();
 	bool IsReadOnly(int pane) const;
 	void ShowDiff(bool bScroll, bool bSelectText);
-	virtual void OnEditOperation(int nAction, LPCTSTR pszText, size_t cchText) override;
+	virtual void OnEditOperation(int nAction, const tchar_t* pszText, size_t cchText) override;
 	bool IsLineInCurrentDiff(int nLine) const;
 	void SelectNone();
 	void SelectDiff(int nDiff, bool bScroll = true, bool bSelectText = true);
@@ -277,6 +277,8 @@ protected:
 	afx_msg void OnUpdateSelectLineDiff(CCmdUI* pCmdUI);
 	afx_msg void OnAddToSubstitutionFilters();
 	afx_msg void OnUpdateAddToSubstitutionFilters(CCmdUI* pCmdUI);
+	afx_msg void OnAddToLineFilters();
+	afx_msg void OnUpdateAddToLineFilters(CCmdUI* pCmdUI);
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnUpdateEditReplace(CCmdUI* pCmdUI);
 	afx_msg void OnConvertEolTo(UINT nID );
@@ -286,7 +288,7 @@ protected:
 	afx_msg void OnUpdateL2RNext(CCmdUI* pCmdUI);
 	afx_msg void OnR2LNext();
 	afx_msg void OnUpdateR2LNext(CCmdUI* pCmdUI);
-	afx_msg void OnChangePane();
+	afx_msg void OnChangePane(UINT nID);
 	afx_msg void OnWMGoto();
 	afx_msg void OnGotoMovedLineLM();
 	afx_msg void OnUpdateGotoMovedLineLM(CCmdUI* pCmdUI);
@@ -333,7 +335,7 @@ protected:
 	afx_msg void OnViewZoomNormal();
 	afx_msg void OnWindowSplit();
 	afx_msg void OnUpdateWindowSplit(CCmdUI* pCmdUI);
-	afx_msg void OnStatusBarDblClick(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnStatusBarClick(NMHDR* pNMHDR, LRESULT* pResult);
 
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()

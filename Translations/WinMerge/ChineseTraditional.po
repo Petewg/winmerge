@@ -70,6 +70,9 @@ msgstr "選取行內差異 (&D)\tF4"
 msgid "Add this change to Substitution &Filters"
 msgstr "將此變動加入替代篩選器 (&F)"
 
+msgid "Add to &Line Filters"
+msgstr ""
+
 #, c-format
 msgid "&Undo"
 msgstr "復原 (&U)"
@@ -245,6 +248,45 @@ msgstr "向量圖縮放 (&V)"
 msgid "Compare Extracted &Text From Images"
 msgstr "比較從圖片中擷取的文字 (&T)"
 
+msgid "Co&mpare"
+msgstr "比較 (&M)"
+
+msgid "&Screenshots"
+msgstr ""
+
+msgid "&Full Size Screenshots"
+msgstr ""
+
+msgid "&HTMLs"
+msgstr ""
+
+msgid "&Texts"
+msgstr ""
+
+msgid "&Resource Trees"
+msgstr ""
+
+msgid "&Size"
+msgstr ""
+
+msgid "Fit to Window"
+msgstr ""
+
+msgid "Clear &Browsing Data"
+msgstr ""
+
+msgid "&Disk Cache"
+msgstr ""
+
+msgid "&Cookies"
+msgstr ""
+
+msgid "&Browsing History"
+msgstr ""
+
+msgid "&All Profile"
+msgstr ""
+
 #, c-format
 msgid "&File"
 msgstr "檔案 (&F)"
@@ -267,6 +309,9 @@ msgstr "二進制 (&B)"
 #, c-format
 msgid "&Image"
 msgstr "圖片 (&I)"
+
+msgid "&Webpage"
+msgstr ""
 
 msgid "New (&3 panes)"
 msgstr "新增三方比較 (&3)"
@@ -1094,6 +1139,9 @@ msgstr "複製檔名 (&F)"
 msgid "Copy Items To Clip&board"
 msgstr "複製項目到剪貼簿 (&B)"
 
+msgid "Copy All Di&splayed Columns"
+msgstr ""
+
 #, c-format
 msgid "&Zip"
 msgstr "Zip (&Z)"
@@ -1133,6 +1181,12 @@ msgstr "複製完整路徑 (&C)"
 #, c-format
 msgid "Copy &Filename"
 msgstr "複製檔名 (&F)"
+
+msgid "&Edit Caption"
+msgstr ""
+
+msgid "&Open..."
+msgstr ""
 
 msgid "Unpacker Settings"
 msgstr "解壓縮程式設定"
@@ -1309,6 +1363,9 @@ msgstr "瀏覽..."
 msgid " Folder: Filter"
 msgstr ""
 
+msgid " File: Prediffer Plugin"
+msgstr ""
+
 #, c-format
 msgid " File: Unpacker Plugin"
 msgstr ""
@@ -1316,9 +1373,6 @@ msgstr ""
 #, c-format
 msgid "Se&lect..."
 msgstr "選擇... (&L)"
-
-msgid "Co&mpare"
-msgstr "比較 (&M)"
 
 #, c-format
 msgid "Cancel"
@@ -1373,6 +1427,9 @@ msgstr ""
 #, c-format
 msgid "Op&en-dialog Auto-Completion:"
 msgstr "「開啟」對話方塊之自動完成 (&E)："
+
+msgid "Auto-&reload modified files:"
+msgstr ""
 
 #, c-format
 msgid "Language:"
@@ -2343,12 +2400,15 @@ msgid "Explorer"
 msgstr "檔案總管"
 
 #, c-format
+msgid "&Add to context menu"
+msgstr "加到右鍵選單 (&A)"
+
+#, c-format
 msgid "E&nable advanced menu"
 msgstr "啟用進階選單 (&N)"
 
-#, c-format
-msgid "&Add to context menu"
-msgstr "加到右鍵選單 (&A)"
+msgid "Enable &Compare As menu"
+msgstr ""
 
 #, c-format
 msgid "&Register shell extension"
@@ -2400,12 +2460,8 @@ msgstr ""
 msgid "Threshold for switching to &binary compare (MB):"
 msgstr ""
 
-msgid ""
-"\n"
-"&Number of compare threads (a negative value implies addition of the number of available CPU cores):"
+msgid "&Number of CPU cores to use:"
 msgstr ""
-"\n"
-"比較進程數 (&N)(負數表示附加可用的CPU內核數量)："
 
 msgid "&CSV File Patterns:"
 msgstr "&CSV 檔案模式："
@@ -2455,6 +2511,21 @@ msgstr "在資料夾比較中啟用圖片比較 (&E)"
 
 msgid "OCR result:"
 msgstr "OCR 結果："
+
+msgid "Webpage"
+msgstr ""
+
+msgid "URL pattern to &include (Regular expression):"
+msgstr ""
+
+msgid "URL pattern to &exclude (Regular expression):"
+msgstr ""
+
+msgid "&User data folder location:"
+msgstr ""
+
+msgid "&Separate user data folders for each pane"
+msgstr ""
 
 #, c-format
 msgid "&Hex View"
@@ -2760,6 +2831,9 @@ msgstr "包括子資料夾"
 
 msgid "Compare Options"
 msgstr "比較選項"
+
+msgid "Hidden Items"
+msgstr ""
 
 #, c-format
 msgid "Name"
@@ -3353,6 +3427,9 @@ msgstr "確認移除"
 msgid "You are about to close the window that is comparing folders. Are you sure you want to close the window?"
 msgstr "您要關閉一個正在比較資料夾的視窗，您確定要關閉視窗嗎？"
 
+msgid "The file or folder name is invalid."
+msgstr ""
+
 #, c-format
 msgid "Failed to execute external editor: %1"
 msgstr "無法執行外部編輯器 %1"
@@ -3829,6 +3906,10 @@ msgstr ""
 #, c-format
 msgid "Compare %1 with %2"
 msgstr "比較 %1 和 %2"
+
+#, c-format
+msgid "Compare %1 with %2 and %3"
+msgstr ""
 
 #, c-format
 msgid "Comma-separated list"
@@ -4379,6 +4460,9 @@ msgstr "關閉其他分頁 (&O)"
 msgid "Enable &Auto Max Width"
 msgstr "開啟自動最大寬度 (&A)"
 
+msgid "We&bpage"
+msgstr ""
+
 msgid "Frhed is not installed."
 msgstr "Frhed 未安裝。"
 
@@ -4411,6 +4495,9 @@ msgstr "耐心"
 
 msgid "histogram"
 msgstr "長條圖"
+
+msgid "none"
+msgstr ""
 
 msgid "GDI"
 msgstr "GDI"
@@ -4565,11 +4652,23 @@ msgstr ""
 msgid "Word-by-word position and text"
 msgstr ""
 
+msgid "AppData folder"
+msgstr ""
+
+msgid "Install folder"
+msgstr ""
+
 #, c-format
 msgid "Allow only one instance to run"
 msgstr "不能同時執行一個以上本程式"
 
 msgid "Allow only one instance to run and wait for the instance to terminate"
+msgstr ""
+
+msgid "Only on window activated"
+msgstr ""
+
+msgid "Immediately"
 msgstr ""
 
 msgid "Al&l"
@@ -4581,8 +4680,8 @@ msgstr "美化"
 msgid "Content Extraction"
 msgstr "擷取內容"
 
-msgid "Visualization"
-msgstr "視覺化"
+msgid "Preview"
+msgstr ""
 
 msgid "Data Query"
 msgstr "資料查詢"
@@ -4677,8 +4776,14 @@ msgstr "美化 XML"
 msgid "Prettify YAML"
 msgstr "美化 YAML"
 
-msgid "Visualize Graphviz"
-msgstr "Graphviz 視覺化"
+msgid "Preview Graphviz"
+msgstr ""
+
+msgid "Preview Markdown"
+msgstr ""
+
+msgid "Preview PlantUML"
+msgstr ""
 
 msgid "Query CSV Data..."
 msgstr "查詢 CSV 資料..."
@@ -4807,9 +4912,13 @@ msgid ""
 "Arguments: Filter or command line options passed to the yq command."
 msgstr ""
 
-msgid ""
-"Graphviz Visualizer. \r\n"
-"Arguments: Command line options passed to the dot command."
+msgid "Graphviz Previewer. \r\nArguments: Command line options passed to the dot command."
+msgstr ""
+
+msgid "Markdown Previewer. \r\nArguments: Command line options passed to the md2html command."
+msgstr ""
+
+msgid "PlantUML Previewer. \r\nArguments: Command line options passed to the plantuml.jar command."
 msgstr ""
 
 msgid ""
@@ -4910,3 +5019,6 @@ msgstr "此系統不支援剪貼簿歷史紀錄。"
 
 msgid "The 32-bit version of WinMerge does not support Clipboard Compare"
 msgstr "32 位元版本的 WinMerge 不支援剪貼簿比較"
+
+msgid "WebView2 runtime is not installed. Do you want to download it?"
+msgstr ""

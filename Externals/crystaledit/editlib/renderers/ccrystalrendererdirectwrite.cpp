@@ -9,6 +9,7 @@
 #define WINVER 0x0a00
 #include <afxwin.h>
 #include "ccrystalrendererdirectwrite.h"
+#include "utils/ctchar.h"
 #include "resource.h"
 #include <d2d1_3.h>
 #include <dwrite_3.h>
@@ -340,7 +341,10 @@ bool CCrystalRendererDirectWrite::GetCharWidth(unsigned start, unsigned end, int
 	if (!m_pFont)
 	{
 		m_pFont.reset(new CFont());
-		m_pFont->CreateFontIndirect(&m_lfBaseFont);
+		LOGFONT lfFont = m_lfBaseFont;
+		lfFont.lfWeight = FW_BOLD;
+		lfFont.lfItalic = TRUE;
+		m_pFont->CreateFontIndirect(&lfFont);
 	}
 	CClientDC dc (CWnd::GetDesktopWindow());
 	CFont *pOldFont = dc.SelectObject(m_pFont.get());
@@ -404,7 +408,7 @@ void CCrystalRendererDirectWrite::DrawMarginIcon(int x, int y, int iconIndex, in
 
 void CCrystalRendererDirectWrite::DrawMarginLineNumber(int x, int y, int number)
 {
-	TCHAR szNumbers[32];
+	tchar_t szNumbers[32];
 	int len = wsprintf(szNumbers, _T("%d"), number);
 	m_renderTarget.DrawText(szNumbers,
 		{ static_cast<float>(x) - m_charSize.width * len - 4, static_cast<float>(y),
@@ -439,7 +443,7 @@ void CCrystalRendererDirectWrite::DrawLineCursor(int left, int right, int y, int
 	m_pTempBrush->SetOpacity(1.0f);
 }
 
-void CCrystalRendererDirectWrite::DrawText(int x, int y, const CRect &rc, const TCHAR *text, size_t len, const int nWidths[])
+void CCrystalRendererDirectWrite::DrawText(int x, int y, const CRect &rc, const tchar_t *text, size_t len, const int nWidths[])
 {
 	CD2DRectF rcF(rc);
 
@@ -617,7 +621,7 @@ void CCrystalRendererDirectWrite::DrawRuler(int left, int top, int width, int he
 	m_pTempBrush->SetColor(ColorRefToColorF(0));
 	float bottom = static_cast<float>(top + height) - 0.5f;
 	int prev10 = (offset / 10) * 10;
-	TCHAR szNumbers[32];
+	tchar_t szNumbers[32];
 	int len = wsprintf(szNumbers, _T("%d"), prev10);
 	if ((offset % 10) != 0 && offset - prev10 < len)
 	{

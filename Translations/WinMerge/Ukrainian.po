@@ -69,6 +69,9 @@ msgstr "Вибрати від&мінність\tF4"
 msgid "Add this change to Substitution &Filters"
 msgstr ""
 
+msgid "Add to &Line Filters"
+msgstr ""
+
 #, c-format
 msgid "&Undo"
 msgstr "&Скасувати"
@@ -244,6 +247,45 @@ msgstr ""
 msgid "Compare Extracted &Text From Images"
 msgstr ""
 
+msgid "Co&mpare"
+msgstr ""
+
+msgid "&Screenshots"
+msgstr ""
+
+msgid "&Full Size Screenshots"
+msgstr ""
+
+msgid "&HTMLs"
+msgstr ""
+
+msgid "&Texts"
+msgstr ""
+
+msgid "&Resource Trees"
+msgstr ""
+
+msgid "&Size"
+msgstr ""
+
+msgid "Fit to Window"
+msgstr ""
+
+msgid "Clear &Browsing Data"
+msgstr ""
+
+msgid "&Disk Cache"
+msgstr ""
+
+msgid "&Cookies"
+msgstr ""
+
+msgid "&Browsing History"
+msgstr ""
+
+msgid "&All Profile"
+msgstr ""
+
 #, c-format
 msgid "&File"
 msgstr "&Файл"
@@ -265,6 +307,9 @@ msgstr ""
 
 #, c-format
 msgid "&Image"
+msgstr ""
+
+msgid "&Webpage"
 msgstr ""
 
 #, c-format
@@ -1088,6 +1133,9 @@ msgstr "Скопіювати &імена файлів"
 msgid "Copy Items To Clip&board"
 msgstr ""
 
+msgid "Copy All Di&splayed Columns"
+msgstr ""
+
 #, c-format
 msgid "&Zip"
 msgstr "&Заархівувати"
@@ -1127,6 +1175,12 @@ msgstr "&Скопіювати повний шлях"
 #, c-format
 msgid "Copy &Filename"
 msgstr "Скопіювати &ім'я файлу"
+
+msgid "&Edit Caption"
+msgstr ""
+
+msgid "&Open..."
+msgstr ""
 
 msgid "Unpacker Settings"
 msgstr ""
@@ -1303,15 +1357,15 @@ msgstr "Перегляд ..."
 msgid " Folder: Filter"
 msgstr ""
 
+msgid " File: Prediffer Plugin"
+msgstr ""
+
 #, c-format
 msgid " File: Unpacker Plugin"
 msgstr ""
 
 #, c-format
 msgid "Se&lect..."
-msgstr ""
-
-msgid "Co&mpare"
 msgstr ""
 
 #, c-format
@@ -1365,6 +1419,9 @@ msgstr ""
 #, c-format
 msgid "Op&en-dialog Auto-Completion:"
 msgstr "Діалог Автоматичного доповнення:"
+
+msgid "Auto-&reload modified files:"
+msgstr ""
 
 #, c-format
 msgid "Language:"
@@ -2328,12 +2385,15 @@ msgid "Explorer"
 msgstr "Провідник"
 
 #, c-format
+msgid "&Add to context menu"
+msgstr "&Додати до контекстного меню"
+
+#, c-format
 msgid "E&nable advanced menu"
 msgstr "В&вімкнути розширене меню"
 
-#, c-format
-msgid "&Add to context menu"
-msgstr "&Додати до контекстного меню"
+msgid "Enable &Compare As menu"
+msgstr ""
 
 #, c-format
 msgid "&Register shell extension"
@@ -2385,7 +2445,7 @@ msgstr ""
 msgid "Threshold for switching to &binary compare (MB):"
 msgstr ""
 
-msgid "\n&Number of compare threads (a negative value implies addition of the number of available CPU cores):"
+msgid "&Number of CPU cores to use:"
 msgstr ""
 
 msgid "&CSV File Patterns:"
@@ -2435,6 +2495,21 @@ msgid "&Enable image compare in folder compare"
 msgstr ""
 
 msgid "OCR result:"
+msgstr ""
+
+msgid "Webpage"
+msgstr ""
+
+msgid "URL pattern to &include (Regular expression):"
+msgstr ""
+
+msgid "URL pattern to &exclude (Regular expression):"
+msgstr ""
+
+msgid "&User data folder location:"
+msgstr ""
+
+msgid "&Separate user data folders for each pane"
 msgstr ""
 
 #, c-format
@@ -2720,6 +2795,9 @@ msgid "Include Subfolders"
 msgstr ""
 
 msgid "Compare Options"
+msgstr ""
+
+msgid "Hidden Items"
 msgstr ""
 
 #, c-format
@@ -3291,6 +3369,9 @@ msgstr "Підтвердження переміщення"
 msgid "You are about to close the window that is comparing folders. Are you sure you want to close the window?"
 msgstr ""
 
+msgid "The file or folder name is invalid."
+msgstr ""
+
 #, c-format
 msgid "Failed to execute external editor: %1"
 msgstr "Неможливо виконати %1"
@@ -3769,6 +3850,10 @@ msgid "Compare %1 with %2"
 msgstr "Порівняння %1 з %2"
 
 #, c-format
+msgid "Compare %1 with %2 and %3"
+msgstr ""
+
+#, c-format
 msgid "Comma-separated list"
 msgstr "Список, розділений комами"
 
@@ -4230,6 +4315,9 @@ msgstr ""
 msgid "Enable &Auto Max Width"
 msgstr ""
 
+msgid "We&bpage"
+msgstr ""
+
 msgid "Frhed is not installed."
 msgstr ""
 
@@ -4255,6 +4343,9 @@ msgid "patience"
 msgstr ""
 
 msgid "histogram"
+msgstr ""
+
+msgid "none"
 msgstr ""
 
 msgid "GDI"
@@ -4410,11 +4501,23 @@ msgstr ""
 msgid "Word-by-word position and text"
 msgstr ""
 
+msgid "AppData folder"
+msgstr ""
+
+msgid "Install folder"
+msgstr ""
+
 #, c-format
 msgid "Allow only one instance to run"
 msgstr "Дозволити запуск лише однієї копії"
 
 msgid "Allow only one instance to run and wait for the instance to terminate"
+msgstr ""
+
+msgid "Only on window activated"
+msgstr ""
+
+msgid "Immediately"
 msgstr ""
 
 msgid "Al&l"
@@ -4426,7 +4529,7 @@ msgstr ""
 msgid "Content Extraction"
 msgstr ""
 
-msgid "Visualization"
+msgid "Preview"
 msgstr ""
 
 msgid "Data Query"
@@ -4522,7 +4625,13 @@ msgstr ""
 msgid "Prettify YAML"
 msgstr ""
 
-msgid "Visualize Graphviz"
+msgid "Preview Graphviz"
+msgstr ""
+
+msgid "Preview Markdown"
+msgstr ""
+
+msgid "Preview PlantUML"
 msgstr ""
 
 msgid "Query CSV Data..."
@@ -4615,7 +4724,13 @@ msgstr ""
 msgid "YAML Prettier with yq command. \r\nArguments: Filter or command line options passed to the yq command."
 msgstr ""
 
-msgid "Graphviz Visualizer. \r\nArguments: Command line options passed to the dot command."
+msgid "Graphviz Previewer. \r\nArguments: Command line options passed to the dot command."
+msgstr ""
+
+msgid "Markdown Previewer. \r\nArguments: Command line options passed to the md2html command."
+msgstr ""
+
+msgid "PlantUML Previewer. \r\nArguments: Command line options passed to the plantuml.jar command."
 msgstr ""
 
 msgid "CSV Querier with q command. \r\nArguments: SQL statement or command line options passed to the q command."
@@ -4695,4 +4810,7 @@ msgid "This system does not support clipboard history."
 msgstr ""
 
 msgid "The 32-bit version of WinMerge does not support Clipboard Compare"
+msgstr ""
+
+msgid "WebView2 runtime is not installed. Do you want to download it?"
 msgstr ""

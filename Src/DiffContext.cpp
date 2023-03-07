@@ -57,6 +57,7 @@ CDiffContext::CDiffContext(const PathContext & paths, int compareMethod)
 , m_nQuickCompareLimit(0)
 , m_nBinaryCompareLimit(0)
 , m_bEnableImageCompare(false)
+, m_pImgfileFilter(nullptr)
 , m_dColorDistanceThreshold(0.0)
 {
 	int index;
@@ -171,10 +172,7 @@ bool CDiffContext::CreateCompareOptions(int compareMethod, const DIFFOPTIONS & o
 	m_pContentCompareOptions.reset();
 	m_pQuickCompareOptions.reset();
 	m_pOptions.reset(new DIFFOPTIONS);
-	if (m_pOptions != nullptr)
-		std::memcpy(m_pOptions.get(), &options, sizeof(DIFFOPTIONS));
-	else
-		return false;
+	*m_pOptions.get() = options;
 
 	m_nCompMethod = compareMethod;
 	if (GetCompareOptions(m_nCompMethod) == nullptr)

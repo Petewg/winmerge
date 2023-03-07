@@ -29,6 +29,7 @@ public :
 	void DrawItem(LPDRAWITEMSTRUCT lpDrawItemStruct);
 
 protected:
+	afx_msg BOOL OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message);
 	DECLARE_MESSAGE_MAP();
 
 private:
@@ -46,8 +47,8 @@ protected:
 		// ctr
 		MergeStatus();
 		// Implement MergeEditStatus
-		void SetLineInfo(LPCTSTR szLine, int nColumn, int nColumns,
-			int nChar, int nChars, int nSelectedLines, int nSelectedChars, LPCTSTR szEol, int nCodepage, bool bHasBom) override;
+		void SetLineInfo(const tchar_t* szLine, int nColumn, int nColumns,
+			int nChar, int nChars, int nSelectedLines, int nSelectedChars, const tchar_t* szEol, int nCodepage, bool bHasBom) override;
 		void UpdateResources();
 	protected:
 		void Update();

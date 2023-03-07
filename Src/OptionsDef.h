@@ -86,6 +86,7 @@ inline const String OPT_VIEW_LINENUMBERS {_T("Settings/ViewLineNumbers"s)};
 inline const String OPT_VIEW_FILEMARGIN {_T("Settings/ViewFileMargin"s)};
 inline const String OPT_VIEW_TOPMARGIN {_T("Settings/ViewTopMargin"s)};
 inline const String OPT_VIEW_TOPMARGIN_TABLE {_T("Settings/ViewTopMarginTable"s)};
+inline const String OPT_VIEW_ZOOM {_T("Settings/ViewZoom"s)};
 inline const String OPT_LINE_NUMBER_USED_AS_HEADERS {_T("Settings/LineNumberUsedAsHeaders"s)};
 inline const String OPT_DIFF_CONTEXT {_T("Settings/DiffContextV2"s)};
 inline const String OPT_INVERT_DIFF_CONTEXT {_T("Settings/InvertDiffContext"s)};
@@ -112,6 +113,8 @@ inline const String OPT_CUSTOM_TEMP_PATH {_T("Settings/CustomTempPath"s)};
 
 inline const String OPT_SPLIT_HORIZONTALLY {_T("Settings/SplitHorizontally"s)};
 inline const String OPT_FILE_SIZE_THRESHOLD {_T("Settings/OPT_FILE_SIZE_THRESHOLD"s)};
+
+inline const String OPT_AUTO_RELOAD_MODIFIED_FILES {_T("Settings/AutoReloadModifiedFiles"s)};
 
 // Color options
 // The difference color
@@ -233,6 +236,18 @@ inline const String OPT_CMP_IMG_INSERTIONDELETIONDETECTION_MODE {_T("Settings/Im
 inline const String OPT_CMP_IMG_VECTOR_IMAGE_ZOOM_RATIO {_T("Settings/ImageVectorImageZoomRatio"s)};
 inline const String OPT_CMP_ENABLE_IMGCMP_IN_DIRCMP {_T("Settings/EnableImageCompareInFolderCompare"s)};
 inline const String OPT_CMP_IMG_OCR_RESULT_TYPE {_T("Settings/ImageOcrResultType"s)};
+
+// WebPage Compare options
+inline const String OPT_CMP_WEB_USERDATAFOLDER_TYPE {_T("Settings/WebPageUserDataFolderType"s)};
+inline const String OPT_CMP_WEB_USERDATAFOLDER_PERPANE {_T("Settings/WebPageUserDataFolderPerPane"s)};
+inline const String OPT_CMP_WEB_FIT_TO_WINDOW {_T("Settings/WebPageFitToWindow"s)};
+inline const String OPT_CMP_WEB_SHOWDIFFERENCES {_T("Settings/WebPageShowDifferences"s)};
+inline const String OPT_CMP_WEB_VIEW_WIDTH {_T("Settings/WebPageViewWidth"s)};
+inline const String OPT_CMP_WEB_VIEW_HEIGHT {_T("Settings/WebPageViewHeight"s)};
+inline const String OPT_CMP_WEB_ZOOM {_T("Settings/WebZoom"s)};
+inline const String OPT_CMP_WEB_USER_AGENT {_T("Settings/WebUserAgent"s)};
+inline const String OPT_CMP_WEB_URL_PATTERN_TO_INCLUDE {_T("Settings/WebPageURLPatternToInclude"s)};
+inline const String OPT_CMP_WEB_URL_PATTERN_TO_EXCLUDE {_T("Settings/WebPageURLPatternToExclude"s)};
 
 // Binary options
 inline const String OPT_CMP_BIN_FILEPATTERNS {_T("Settings/BinaryFilePatterns"s)};

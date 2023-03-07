@@ -83,7 +83,7 @@ CBitmap *GetDarkenedBitmap(CDC *pDC, CBitmap *pBitmap, bool lighten)
 	bi.bmiHeader.biClrUsed = 0;
 	bi.bmiHeader.biClrImportant = 0;
 
-	std::unique_ptr<BYTE[]> pbuf(new BYTE[bi.bmiHeader.biSizeImage]);
+	auto pbuf = std::make_unique<BYTE[]>(bi.bmiHeader.biSizeImage);
 	GetDIBits(dcMem.m_hDC, (HBITMAP)*pBitmapDarkened, 0, bm.bmHeight, pbuf.get(), &bi, DIB_RGB_COLORS);
 
 	if (!lighten)
@@ -164,7 +164,7 @@ CBitmap *GetDarkenedBitmap(CDC *pDC, CBitmap *pBitmap, bool lighten)
 	return pBitmapDarkened;
 }
 
-bool LoadImageFromResource(ATL::CImage& image, const TCHAR *pName, const TCHAR *pType)
+bool LoadImageFromResource(ATL::CImage& image, const tchar_t *pName, const tchar_t *pType)
 {
 	HRSRC hrsrc = FindResource(nullptr, pName, pType);
 	if (hrsrc == nullptr)

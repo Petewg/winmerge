@@ -6,13 +6,13 @@ namespace Options { namespace Project
 {
 
 /** @brief Setting name for project options. */
-const TCHAR Section[] = _T("Project");
+const tchar_t Section[] = _T("Project");
 
 /** @brief Setting name for operations */
 const String OperationKeyword[OperationCount] = { _T("Open"), _T("Load"), _T("Save") };
 
 /** @brief Setting name for items */
-const String ItemKeyword[ItemCount] = { _T("FileFilter"), _T("IncludeSubfolders"), _T("UnpackerPlugin"), _T("CompareOptions") };
+const String ItemKeyword[ItemCount] = { _T("FileFilter"), _T("IncludeSubfolders"), _T("UnpackerPlugin"), _T("CompareOptions"), _T("HiddenItems") };
 
 /**
  * @brief Initialize project settings.

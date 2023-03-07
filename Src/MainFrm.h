@@ -33,6 +33,8 @@ struct FileLocation;
 class DropHandler;
 class CMainFrame;
 class CImgMergeFrame;
+class CWebPageDiffFrame;
+class DirWatcher;
 
 typedef std::shared_ptr<TempFile> TempFilePtr;
 
@@ -66,6 +68,7 @@ public:
 		FRAME_FILE, /**< File compare frame. */
 		FRAME_HEXFILE, /**< Hex file compare frame. */
 		FRAME_IMGFILE, /**< Image file compare frame. */
+		FRAME_WEBPAGE, /**< Web page compare frame. */
 		FRAME_OTHER, /**< No frame? */
 	};
 
@@ -85,8 +88,8 @@ public:
 	struct OpenTableFileParams : public OpenTextFileParams
 	{
 		virtual ~OpenTableFileParams() {}
-		std::optional<TCHAR> m_tableDelimiter;
-		std::optional<TCHAR> m_tableQuote;
+		std::optional<tchar_t> m_tableDelimiter;
+		std::optional<tchar_t> m_tableQuote;
 		std::optional<bool> m_tableAllowNewlinesInQuotes;
 	};
 
@@ -103,9 +106,20 @@ public:
 		int m_y = -1;
 	};
 
+	struct OpenWebPageParams : public OpenFileParams
+	{
+		virtual ~OpenWebPageParams() {}
+	};
+
 	struct OpenAutoFileParams : public OpenTableFileParams, public OpenBinaryFileParams, public OpenImageFileParams
 	{
 		virtual ~OpenAutoFileParams() {}
+	};
+
+	struct OpenFolderParams : public OpenFileParams
+	{
+		virtual ~OpenFolderParams() {}
+		std::vector<String> m_hiddenItems;
 	};
 
 	CMainFrame();
@@ -115,7 +129,7 @@ public:
 	bool m_bShowErrors; /**< Show folder compare error items? */
 	LOGFONT m_lfDiff; /**< MergeView user-selected font */
 	LOGFONT m_lfDir; /**< DirView user-selected font */
-	static const TCHAR szClassName[];
+	static const tchar_t szClassName[];
 
 // Operations
 public:
@@ -123,6 +137,7 @@ public:
 	HMENU NewMergeViewMenu();
 	HMENU NewHexMergeViewMenu();
 	HMENU NewImgMergeViewMenu();
+	HMENU NewWebPageDiffViewMenu();
 	HMENU NewOpenViewMenu();
 	HMENU NewDefaultMenu(int ID = 0);
 	HMENU GetPrediffersSubmenu(HMENU mainMenu);
@@ -148,7 +163,7 @@ public:
 	bool DoSelfCompare(UINT nID, const String& file, const String strDesc[] = nullptr,
 		const PackingInfo* infoUnpacker = nullptr, const PrediffingInfo * infoPrediffer = nullptr,
 		const OpenFileParams* pOpenParams = nullptr);
-	bool ShowAutoMergeDoc(CDirDoc * pDirDoc, int nFiles, const FileLocation fileloc[],
+	bool ShowAutoMergeDoc(UINT nID, CDirDoc * pDirDoc, int nFiles, const FileLocation fileloc[],
 		const DWORD dwFlags[], const String strDesc[], const String& sReportFile = _T(""),
 		const PackingInfo * infoUnpacker = nullptr, const OpenFileParams *pOpenParams = nullptr);
 	bool ShowMergeDoc(UINT nID, CDirDoc * pDirDoc, int nFiles, const FileLocation fileloc[],
@@ -171,6 +186,9 @@ public:
 	bool ShowImgMergeDoc(CDirDoc * pDirDoc, int nFiles, const FileLocation fileloc[],
 		const DWORD dwFlags[], const String strDesc[], const String& sReportFile = _T(""),
 		const PackingInfo * infoUnpacker = nullptr, const OpenImageFileParams *pOpenParams = nullptr);
+	bool ShowWebDiffDoc(CDirDoc * pDirDoc, int nFiles, const FileLocation fileloc[],
+		const DWORD dwFlags[], const String strDesc[], const String& sReportFile = _T(""),
+		const PackingInfo * infoUnpacker = nullptr, const OpenWebPageParams *pOpenParams = nullptr);
 
 	void UpdateResources();
 	void ApplyDiffOptions();
@@ -186,6 +204,10 @@ public:
 	DropHandler *GetDropHandler() const { return m_pDropHandler; }
 	const CTypedPtrArray<CPtrArray, CMDIChildWnd*>* GetChildArray() const { return &m_arrChild; }
 	IMergeDoc* GetActiveIMergeDoc();
+	DirWatcher* GetDirWatcher() { return m_pDirWatcher.get(); }
+	void WatchDocuments(IMergeDoc* pMergeDoc);
+	void UnwatchDocuments(IMergeDoc* pMergeDoc);
+	CToolBar* GetToolbar() { return &m_wndToolBar; }
 
 // Overrides
 	virtual void GetMessageString(UINT nID, CString& rMessage) const;
@@ -256,6 +278,7 @@ protected:
 		MENU_DIRVIEW,
 		MENU_HEXMERGEVIEW,
 		MENU_IMGMERGEVIEW,
+		MENU_WEBPAGEDIFFVIEW,
 		MENU_OPENVIEW,
 		MENU_COUNT, // Add new items before this item
 	};
@@ -268,6 +291,12 @@ protected:
 		MENU_FILECMP = 0x000002,
 		MENU_FOLDERCMP = 0x000004,
 		MENU_ALL = MENU_MAINFRM | MENU_FILECMP | MENU_FOLDERCMP
+	};
+	enum
+	{
+		AUTO_RELOAD_MODIFIED_FILES_DISABLED,
+		AUTO_RELOAD_MODIFIED_FILES_ONWINDOWACTIVATED,
+		AUTO_RELOAD_MODIFIED_FILES_IMMEDIATELY
 	};
 
 	/**
@@ -284,8 +313,10 @@ protected:
 
 	std::unique_ptr<BCMenu> m_pMenus[MENU_COUNT]; /**< Menus for different views */
 	std::unique_ptr<BCMenu> m_pImageMenu;
+	std::unique_ptr<BCMenu> m_pWebPageMenu;
 	std::vector<TempFilePtr> m_tempFiles; /**< List of possibly needed temp files. */
 	DropHandler *m_pDropHandler;
+	std::unique_ptr<DirWatcher> m_pDirWatcher;
 
 // Generated message map functions
 protected:
@@ -311,7 +342,7 @@ protected:
 	afx_msg void OnReloadPlugins();
 	afx_msg void OnSaveConfigData();
 	template <int nFiles, unsigned nID>
-	afx_msg void OnFileNew();
+	afx_msg void OnFileNew() { DoFileNew(nID, nFiles); }
 	afx_msg void OnToolsFilters();
 	afx_msg void OnViewStatusBar();
 	afx_msg void OnUpdateViewTabBar(CCmdUI* pCmdUI);
@@ -379,12 +410,13 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-	void addToMru(LPCTSTR szItem, LPCTSTR szRegSubKey, UINT nMaxItems = 20);
+	void addToMru(const tchar_t* szItem, const tchar_t* szRegSubKey, UINT nMaxItems = 20);
 	OpenDocList &GetAllOpenDocs();
 	MergeDocList &GetAllMergeDocs();
 	DirDocList &GetAllDirDocs();
 	HexMergeDocList &GetAllHexMergeDocs();
 	std::vector<CImgMergeFrame *> GetAllImgMergeFrames();
+	std::vector<CWebPageDiffFrame *> GetAllWebPageDiffFrames();
 	void UpdateFont(FRAMETYPE frame);
 	BOOL CreateToolbar();
 	CMergeEditView * GetActiveMergeEditView();

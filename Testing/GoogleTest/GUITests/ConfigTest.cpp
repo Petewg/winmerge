@@ -198,6 +198,7 @@ namespace
 		{ OPT_CUSTOM_TEMP_PATH, varprop::VT_STRING, {}, {L"", L"c:\\tmp"}},
 		{ OPT_SPLIT_HORIZONTALLY, varprop::VT_BOOL, {}, {}},
 		{ OPT_FILE_SIZE_THRESHOLD, varprop::VT_INT, {0xffff, 0x7fffffff}, {}},
+		{ OPT_AUTO_RELOAD_MODIFIED_FILES, varprop::VT_INT, {0, 2}, {}},
 		//
 		{ OPT_DIRCLR_USE_COLORS, varprop::VT_BOOL, {}, {}},
 		{ OPT_COLOR_SCHEME, varprop::VT_STRING, {}, {L"", L"Default", L"Modern", L"Solarized Dark", L"Solarized Light"}},
@@ -217,7 +218,7 @@ namespace
 		{ OPT_CMP_COMPARE_THREADS, varprop::VT_INT, {-1, 1, 2}, {}},
 		{ OPT_CMP_IGNORE_REPARSE_POINTS, varprop::VT_BOOL, {}, {}},
 		{ OPT_CMP_INCLUDE_SUBDIRS, varprop::VT_BOOL, {}, {}},
-		{ OPT_CMP_DIFF_ALGORITHM, varprop::VT_INT, {0, 1, 2, 3}, {}},
+		{ OPT_CMP_DIFF_ALGORITHM, varprop::VT_INT, {0, 1, 2, 3, 4}, {}},
 		{ OPT_CMP_INDENT_HEURISTIC, varprop::VT_BOOL, {}, {}},
 		{ OPT_CMP_COMPLETELY_BLANK_OUT_IGNORED_CHANGES, varprop::VT_BOOL, {}, {}},
 		// Image Compare options

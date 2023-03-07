@@ -25,7 +25,7 @@ if "%1" == "" (
 
 del "%DISTDIR%\winmerge-%SAFEAPPVER%-full-src.7z" 2> NUL
 
-7z.exe a -t7z -xr!*.gcno -xr!*.gcda -xr!*.gcov -xr!*.orig -xr!*.o -xr!*.a -xr!.dep -xr!*.asm -xr!*.out -xr!debug_static* -xr!debug_shared* -xr!release_static* -xr!release_shared* -xr!*.bak -xr!*.lang -xr!*.db -xr!*.ncb  -xr!*.sdf -xr!*.bsc -xr!*.opt -xr!*.plg -xr!*.suo -xr!*.obj -xr!*.ilk -xr!*.pdb -xr!*.pch -xr!*.res -xr!*.exe -xr!*.sbr -xr!.vs -xr!*.VC.db-* -xr!*.zip -xr!WinMergeSplash.psd -xr!*.lib -xr!*.exp -xr!*.idb -xr!*.%COMPUTERNAME%.%USERNAME%.user -xr!BuildLog.htm -xr!ipch -xr!*.tlb -xr!*.tlog -xr!*.*~ -xr!CVS -xr!.svn -xr!.hg -xr!*.log -xr!*.lastbuildstate -xr!FreeImage*.dll -xr!WinIMergeLib.dll -xr!WinIMerge.exe -xr!BuildTmp -xr!Docs\Manual\Tools "%DISTDIR%\winmerge-%SAFEAPPVER%-full-src.7z" ArchiveSupport ColorSchemes Docs Externals Filters Installer Plugins ShellExtension Src Testing Tools Translations Web readme.txt Version.h Version.in *.cmd *.bat *.inf *.sln *.vbs
+7z.exe a -t7z -xr!*.gcno -xr!*.gcda -xr!*.gcov -xr!*.orig -xr!*.o -xr!*.a -xr!.dep -xr!*.asm -xr!*.out -xr!debug_static* -xr!debug_shared* -xr!release_static* -xr!release_shared* -xr!*.bak -xr!*.lang -xr!*.db -xr!*.ncb  -xr!*.sdf -xr!*.bsc -xr!*.opt -xr!*.plg -xr!*.suo -xr!*.obj -xr!*.ilk -xr!*.pdb -xr!*.pch -xr!*.res -xr!*.exe -xr!*.sbr -xr!.vs -xr!*.VC.db-* -xr!*.zip -xr!WinMergeSplash.psd -xr!*.lib -xr!*.exp -xr!*.idb -xr!*.%COMPUTERNAME%.%USERNAME%.user -xr!BuildLog.htm -xr!ipch -xr!*.tlb -xr!*.tlog -xr!*.*~ -xr!CVS -xr!.svn -xr!.hg -xr!*.log -xr!*.lastbuildstate -xr!FreeImage*.dll -xr!WinIMergeLib.dll -xr!WinIMerge.exe -xr!WinWebDiff.dll -xr!WinWebDiff.exe -xr!BuildTmp -xr!Docs\Manual\Tools "%DISTDIR%\winmerge-%SAFEAPPVER%-full-src.7z" ArchiveSupport ColorSchemes Docs Externals Filters Installer Plugins ShellExtension Src Testing Tools Translations Web readme.txt Version.h Version.in *.cmd *.bat *.inf *.sln *.vbs
 
 (
 echo "%DISTDIR%\WinMerge-%SAFEAPPVER%-Setup.exe"
@@ -73,7 +73,7 @@ if "%1" == "x64" (
 )
 
 rem Create folder structure
-for %%i in (ColorSchemes Languages\ShellExtension Filters MergePlugins Docs Frhed\Docs Frhed\Languages WinIMerge Merge7z\Lang Commands\Apache-Tika Commands\tidy-html5 Commands\jq Commands\q Commands\GnuWin32) do (
+for %%i in (ColorSchemes Languages\ShellExtension Filters MergePlugins Docs Frhed\Docs Frhed\Languages WinIMerge WinWebDiff Merge7z\Lang Commands\Apache-Tika Commands\tidy-html5 Commands\jq Commands\q Commands\GnuWin32 Commands\md4c) do (
   mkdir "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\%%i" 2> NUL
 )
 
@@ -170,9 +170,15 @@ copy Build\%PLATFORM%\Release\WinIMerge\freeimage-license-gplv2.txt "%DISTDIR%\%
 copy Build\%PLATFORM%\Release\WinIMerge\WinIMergeLib.dll "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\WinIMerge\" > NUL
 copy Build\%PLATFORM%\Release\WinIMerge\vcomp*.dll "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\" > NUL
 
+rem WinWebDiff
+echo Copy WinWebDiff...
+copy Build\%PLATFORM%\Release\WinWebDiff\LICENSE*.txt "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\WinWebDiff\" > NUL
+copy Build\%PLATFORM%\Release\WinWebDiff\WinWebDiffLib.dll "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\WinWebDiff\" > NUL
+
 rem Commands
 echo Copy Commands...
 xcopy /s/y Plugins\Commands "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands"
+copy Plugins\Commands\DownloadFiles.bat "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands"
 
 rem Patch
 echo Copy Patch...
@@ -187,6 +193,11 @@ rem Copy tidy-html5...
 echo Copy tidy-html5...
 copy Build\tidy-html5\bin\tidy.* "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\tidy-html5\" > NUL
 copy Build\tidy-html5\tidy-html5-5.4.0\README\LICENSE.md "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\tidy-html5\" > NUL
+
+rem Copy md4c...
+echo Copy md4c...
+copy Build\md4c\mingw32\bin\*.* "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\md4c\" > NUL
+copy Build\md4c\mingw32\share\licenses\md4c\LICENSE.md "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\Commands\md4c\" > NUL
 
 rem Plugin.xml
 copy Plugins\Plugins.xml "%DISTDIR%\%PLATFORMH%zip-version\WinMerge\MergePlugins\" > NUL

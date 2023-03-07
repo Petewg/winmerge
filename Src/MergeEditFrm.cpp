@@ -119,6 +119,13 @@ BOOL CMergeEditFrame::OnCreateClient( LPCREATESTRUCT /*lpcs*/,
 	m_wndFilePathBar.SetOnSetFocusCallback([&](int pane) {
 		m_pMergeDoc->GetView(0, pane)->SetActivePane();
 	});
+	m_wndFilePathBar.SetOnCaptionChangedCallback([&](int pane, const String& sText) {
+		m_pMergeDoc->SetDescription(pane, sText);
+		m_pMergeDoc->UpdateHeaderPath(pane);
+	});
+	m_wndFilePathBar.SetOnFileSelectedCallback([&](int pane, const String& sFilepath) {
+		m_pMergeDoc->ChangeFile(pane, sFilepath);
+	});
 	m_wndStatusBar.SetPaneCount(m_pMergeDoc->m_nBuffers);
 	
 	// Set frame window handles so we can post stage changes back
@@ -159,7 +166,7 @@ BOOL CMergeEditFrame::OnCreateClient( LPCREATESTRUCT /*lpcs*/,
 */
 int CMergeEditFrame::OnCreate(LPCREATESTRUCT lpCreateStruct) 
 {
-	if (CMDIChildWnd::OnCreate(lpCreateStruct) == -1)
+	if (__super::OnCreate(lpCreateStruct) == -1)
 		return -1;
 
 	EnableDocking(CBRS_ALIGN_TOP|CBRS_ALIGN_BOTTOM|CBRS_ALIGN_LEFT|CBRS_ALIGN_RIGHT);
@@ -446,7 +453,7 @@ LRESULT CMergeEditFrame::OnStorePaneSizes(WPARAM wParam, LPARAM lParam)
 
 void CMergeEditFrame::OnSize(UINT nType, int cx, int cy) 
 {
-	CMDIChildWnd::OnSize(nType, cx, cy);
+	__super::OnSize(nType, cx, cy);
 	
 	UpdateHeaderSizes();
 }

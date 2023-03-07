@@ -52,6 +52,7 @@ public:
 	CDirDoc* GetDirDoc() const override { return m_pDirDoc; };
 	void SetDirDoc(CDirDoc * pDirDoc) override;
 	void UpdateResources();
+	void RefreshOptions();
 	bool CloseNow() override;
 	void DirDocClosing(CDirDoc * pDirDoc) override { m_pDirDoc = nullptr; }
 	void UpdateLastCompareResult();
@@ -70,7 +71,7 @@ public:
 	bool IsModified() const;
 	IMergeDoc::FileChange IsFileChangedOnDisk(int pane) const;
 	void CheckFileChanged(void) override;
-	String GetDescription(int pane) const { return m_strDesc[pane]; }
+	String GetDescription(int pane) const override { return m_strDesc[pane]; }
 	static bool IsLoadable();
 
 // Attributes
@@ -99,7 +100,6 @@ private:
 	void SaveActivePane();
 	virtual ~CImgMergeFrame();
 	void CreateImgWndStatusBar(CStatusBar &, CWnd *);
-// Generated message map functions
 private:
 	bool OpenImages();
 	int UpdateDiffItem(CDirDoc * pDirDoc);
@@ -126,7 +126,8 @@ private:
 	int m_nActivePane;
 	PackingInfo m_infoUnpacker;
 	std::vector<int> m_unpackerSubcodes[3];
-
+// Generated message map functions
+protected:
 	//{{AFX_MSG(CImgMergeFrame)
 	afx_msg int OnCreate(LPCREATESTRUCT lpCreateStruct);
 	afx_msg void OnMDIActivate(BOOL bActivate, CWnd* pActivateWnd, CWnd* pDeactivateWnd);
@@ -153,7 +154,7 @@ private:
 	afx_msg void OnFileRecompareAs(UINT nID);
 	afx_msg void OnUpdateFileRecompareAs(CCmdUI* pCmdUI);
 	afx_msg void OnOpenWithUnpacker();
-	afx_msg void OnWindowChangePane();
+	afx_msg void OnWindowChangePane(UINT nID);
 	afx_msg void OnSize(UINT nType, int cx, int cy);
 	afx_msg void OnIdleUpdateCmdUI();
 	afx_msg void OnUpdateStatusNum(CCmdUI* pCmdUI);

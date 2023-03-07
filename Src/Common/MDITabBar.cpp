@@ -56,7 +56,7 @@ BOOL CMDITabBar::Create(CMDIFrameWnd* pMainFrame)
 	m_font.CreateFontIndirect(&ncm.lfMenuFont);
 	SetFont(&m_font);
 
-	m_tooltips.Create(m_pMainFrame);
+	m_tooltips.Create(m_pMainFrame, TTS_NOPREFIX);
 	m_tooltips.AddTool(this, _T(""));
 
 	return TRUE;
@@ -304,6 +304,9 @@ void CMDITabBar::UpdateTabs()
 
 		if (strTitle.GetLength() > nMaxTitleLength)
 			strTitle = strTitle.Left(nMaxTitleLength - 3) + _T("...");
+
+		// Escape the '&' to prevent it from being removed and underlining the next character in the string.
+		strTitle.Replace(_T("&"), _T("&&"));
 
 		if (item == -1)
 		{
@@ -606,6 +609,10 @@ void CMDITabBar::UpdateToolTips(int nTabItemIndex)
 
 			if (strTooltip == strTitle && strTitle.GetLength() <= GetMaxTitleLength())
 				strTooltip.Empty();
+
+			constexpr size_t MAX_TIP_TEXT_LENGTH = 1024;
+			if (strTooltip.GetLength() > MAX_TIP_TEXT_LENGTH)
+				strTooltip.Truncate(MAX_TIP_TEXT_LENGTH);
 
 			m_tooltips.UpdateTipText(strTooltip, this);
 			CRect rc;

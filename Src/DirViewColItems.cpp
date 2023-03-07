@@ -61,6 +61,15 @@ const char *COLHDR_NSDIFFS      = N_("Differences");
 const char *COLHDR_BINARY       = NC_("DirView|ColumnHeader", "Binary");
 const char *COLHDR_UNPACKER     = N_("Unpacker");
 const char *COLHDR_PREDIFFER    = N_("Prediffer");
+#ifdef SHOW_DIFFITEM_DEBUG_INFO
+const char *COLHDR_DEBUG_DIFFCODE    = N_("[Debug]diffcode");
+const char *COLHDR_DEBUG_CUSTOMFLAGS = N_("[Debug]customFlags");
+const char *COLHDR_DEBUG_THIS        = N_("[Debug]this");
+const char *COLHDR_DEBUG_PARENT      = N_("[Debug]parent");
+const char *COLHDR_DEBUG_CHILDREN    = N_("[Debug]children");
+const char *COLHDR_DEBUG_FLINK       = N_("[Debug]Flink");
+const char *COLHDR_DEBUG_BLINK       = N_("[Debug]Blink");
+#endif // SHOW_DIFFITEM_DEBUG_INFO
 
 const char *COLDESC_FILENAME    = N_("Filename or folder name.");
 const char *COLDESC_DIR         = N_("Subfolder name when subfolders are included.");
@@ -79,9 +88,9 @@ const char *COLDESC_LTIMEC      = N_("Left side creation time.");
 const char *COLDESC_RTIMEC      = N_("Right side creation time.");
 const char *COLDESC_MTIMEC      = N_("Middle side creation time.");
 const char *COLDESC_NEWER       = N_("Tells which side has newer modification date.");
-const char *COLDESC_LVERSION    = N_("Left side file version, only for some filetypes.");
-const char *COLDESC_RVERSION    = N_("Right side file version, only for some filetypes.");
-const char *COLDESC_MVERSION    = N_("Middle side file version, only for some filetypes.");
+const char *COLDESC_LVERSION    = N_("Left side file version, only for some file types.");
+const char *COLDESC_RVERSION    = N_("Right side file version, only for some file types.");
+const char *COLDESC_MVERSION    = N_("Middle side file version, only for some file types.");
 const char *COLDESC_RESULT_ABBR = N_("Short comparison result.");
 const char *COLDESC_LATTRIBUTES = N_("Left side attributes.");
 const char *COLDESC_RATTRIBUTES = N_("Right side attributes.");
@@ -97,6 +106,15 @@ const char *COLDESC_NSDIFFS     = N_("Number of differences in file. This number
 const char *COLDESC_BINARY      = N_("Shows an asterisk (*) if the file is binary.");
 const char *COLDESC_UNPACKER    = N_("Unpacker plugin name or pipeline.");
 const char *COLDESC_PREDIFFER   = N_("Prediffer plugin name or pipeline.");
+#ifdef SHOW_DIFFITEM_DEBUG_INFO
+const char *COLDESC_DEBUG_DIFFCODE    = N_("Compare result");
+const char *COLDESC_DEBUG_CUSTOMFLAGS = N_("ViewCustomFlags flags");
+const char *COLDESC_DEBUG_THIS        = N_("This item");
+const char *COLDESC_DEBUG_PARENT      = N_("Parent of current item");
+const char *COLDESC_DEBUG_CHILDREN    = N_("Link to first child of this item");
+const char *COLDESC_DEBUG_FLINK       = N_("Forward \"sibling\" link");
+const char *COLDESC_DEBUG_BLINK       = N_("Backward \"sibling\" link");
+#endif // SHOW_DIFFITEM_DEBUG_INFO
 }
 
 /**
@@ -117,15 +135,6 @@ static int cmpu64(uint64_t i1, uint64_t i2)
 	return i1>i2 ? 1 : -1;
 }
 /**
- * @brief Convert int64_t to int sign
- */
-static int sign64(int64_t val)
-{
-  if (val>0) return 1;
-  if (val<0) return -1;
-  return 0;
-}
-/**
  * @brief Function to compare two diffcodes for a sort
  * @todo How shall we order diff statuses?
  */
@@ -138,17 +147,6 @@ static int cmpdiffcode(unsigned diffcode1, unsigned diffcode2)
 	if (!same1 && same2)
 		return -1;
 	return diffcode1 - diffcode2;
-}
-/**
- * @brief Function to compare two doubles for a sort
- */
-static int cmpfloat(double v1, double v2)
-{
-	if (v1>v2)
-		return 1;
-	if (v1<v2)
-		return -1;
-	return 0;
 }
 /**
  * @brief Formats a size as a short string.
@@ -164,7 +162,7 @@ static int cmpfloat(double v1, double v2)
  */
 static String MakeShortSize(int64_t size)
 {
-	TCHAR buffer[48];
+	tchar_t buffer[48];
 	if (size < 1024)
 		return strutils::format(_T("%d B"), static_cast<int>(size));
 	else
@@ -182,20 +180,58 @@ static String MakeShortSize(int64_t size)
 /* @{ */
 /**
  * @brief Format Filename column data.
+ * @param [in] pCtxt Pointer to compare context.
  * @param [in] p Pointer to DIFFITEM.
  * @return String to show in the column.
  */
 template<class Type>
-static Type ColFileNameGet(const CDiffContext *, const void *p, int) //sfilename
+static Type ColFileNameGet(const CDiffContext * pCtxt, const void *p, int) //sfilename
 {
-	const boost::flyweight<String> &lfilename = static_cast<const DIFFITEM*>(p)->diffFileInfo[0].filename;
-	const boost::flyweight<String> &rfilename = static_cast<const DIFFITEM*>(p)->diffFileInfo[1].filename;
-	if (lfilename.get().empty())
-		return rfilename;
-	else if (rfilename.get().empty() || lfilename == rfilename)
-		return lfilename;
+	assert(pCtxt != nullptr && p != nullptr);
+
+	int nDirs = pCtxt->GetCompareDirs();
+
+	const DIFFITEM* pDiffItem = static_cast<const DIFFITEM*>(p);
+	const DiffFileInfo* pDiffFileInfo = pDiffItem->diffFileInfo;
+
+	bool bExist[3] = {};
+	for (int i = 0; i < nDirs; i++)
+		bExist[i] = (pDiffItem->diffcode.exists(i) && (!pDiffFileInfo[i].filename.get().empty()));
+
+	bool bIsSameName = true;
+	int index = -1;
+	for (int i = 0; i < nDirs; i++)
+	{
+		if (bExist[i])
+		{
+			if (index == -1)
+				index = i;
+			else if (pDiffFileInfo[i].filename != pDiffFileInfo[index].filename)
+			{
+				bIsSameName = false;
+				break;
+			}
+		}
+	}
+
+	if (bIsSameName)
+	{
+		if (index == -1)
+			index = 0;
+		return pDiffFileInfo[index].filename;
+	}
 	else
-		return static_cast<Type>(lfilename.get() + _T("|") + rfilename.get());
+	{
+		if (nDirs < 3)
+			return static_cast<Type>(pDiffFileInfo[0].filename.get() + _T("|") + pDiffFileInfo[1].filename.get());
+		else
+		{
+			String none = _("<None>");
+			return static_cast<Type>((bExist[0] ? pDiffFileInfo[0].filename.get() : none) + _T("|")
+				+ (bExist[1] ? pDiffFileInfo[1].filename.get() : none) + _T("|")
+				+ (bExist[2] ? pDiffFileInfo[2].filename.get() : none));
+		}
+	}
 }
 
 /**
@@ -211,52 +247,79 @@ static String ColExtGet(const CDiffContext *, const void *p, int) //sfilename
 		return _T("");
 	const String &r = di.diffFileInfo[0].filename;
 	String s = paths::FindExtension(r);
-	return s.c_str() + _tcsspn(s.c_str(), _T("."));
+	return s.c_str() + tc::tcsspn(s.c_str(), _T("."));
 }
 
 /**
  * @brief Format Folder column data.
+ * @param [in] pCtxt Pointer to compare context.
  * @param [in] p Pointer to DIFFITEM.
  * @return String to show in the column.
  */
-static String ColPathGet(const CDiffContext *, const void *p, int)
+static String ColPathGet(const CDiffContext * pCtxt, const void *p, int)
 {
+	assert(pCtxt != nullptr && p != nullptr);
+
+	int nDirs = pCtxt->GetCompareDirs();
+
 	const DIFFITEM &di = *static_cast<const DIFFITEM*>(p);
-	String s = di.diffFileInfo[1].path;
-	const String &t = di.diffFileInfo[0].path;
 
-	// If we have unique path, just print the existing path name
-	if (s.length() == 0 || t.length() == 0)
+	if (nDirs < 3)
 	{
-		if (s.length() == 0)
-			return t;
-		else
-			return s;
-	}
-
-	size_t i = 0, j = 0;
-	do
-	{
-		const TCHAR *pi = _tcschr(s.c_str() + i, '\\');
-		const TCHAR *pj = _tcschr(t.c_str() + j, '\\');
-		size_t i_ahead = (pi != nullptr ? pi - s.c_str() : std::string::npos);
-		size_t j_ahead = (pj != nullptr ? pj - t.c_str() : std::string::npos);
-		size_t length_s = ((i_ahead != std::string::npos ? i_ahead : s.length()) - i);
-		size_t length_t = ((j_ahead != std::string::npos ? j_ahead : t.length()) - j);
-		if (length_s != length_t ||
-			memcmp(s.c_str() + i, t.c_str() + j, length_s) != 0)
+		String s = di.diffFileInfo[1].path;
+		const String& t = di.diffFileInfo[0].path;
+		
+		// If we have unique path, just print the existing path name
+		if (s.length() == 0 || t.length() == 0)
 		{
-			String u(t.c_str() + j, length_t + 1);
-			u[length_t] = '|';
-			s.insert(i, u);
-			i_ahead += u.length();
+			if (s.length() == 0)
+				return t;
+			else
+				return s;
 		}
-		i = i_ahead + 1;
-		j = j_ahead + 1;
-	} while (i && j);
-	if (s.empty())
-		s = _T(".");
-	return s;
+
+		size_t i = 0, j = 0;
+		do
+		{
+			const tchar_t* pi = tc::tcschr(s.c_str() + i, '\\');
+			const tchar_t* pj = tc::tcschr(t.c_str() + j, '\\');
+			size_t i_ahead = (pi != nullptr ? pi - s.c_str() : std::string::npos);
+			size_t j_ahead = (pj != nullptr ? pj - t.c_str() : std::string::npos);
+			size_t length_s = ((i_ahead != std::string::npos ? i_ahead : s.length()) - i);
+			size_t length_t = ((j_ahead != std::string::npos ? j_ahead : t.length()) - j);
+			if (length_s != length_t ||
+				memcmp(s.c_str() + i, t.c_str() + j, length_s) != 0)
+			{
+				String u(t.c_str() + j, length_t + 1);
+				u[length_t] = '|';
+				s.insert(i, u);
+				i_ahead += u.length();
+			}
+			i = i_ahead + 1;
+			j = j_ahead + 1;
+		} while (i && j);
+		if (s.empty())
+			s = _T(".");
+		return s;
+	}
+	else
+	{
+		// If we have unique path, just print the existing path name
+		const DiffFileInfo* pDiffFileInfo = di.diffFileInfo;
+		if (pDiffFileInfo[0].path == pDiffFileInfo[1].path && pDiffFileInfo[0].path == pDiffFileInfo[2].path)
+			return pDiffFileInfo[0].path;
+
+		String s;
+		const std::vector<const DIFFITEM*> ancestors = di.GetAncestors();
+		size_t depth = ancestors.size();
+		for (int i = 0; i < depth; i++)
+		{
+			if (i > 0)
+				s += _T("\\");
+			s += ColFileNameGet<String>(pCtxt, ancestors[i], 0);
+		}
+		return s;
+	}
 }
 
 /**
@@ -273,6 +336,7 @@ static String ColStatusGet(const CDiffContext *pCtxt, const void *p, int)
 	// skipped items before unique items, for example, so that
 	// skipped unique items are labeled as skipped, not unique.
 	String s;
+	bool bAddCompareFlags3WayString = false;
 	if (di.diffcode.isResultError())
 	{
 		s = _("Unable to compare files");
@@ -315,16 +379,19 @@ static String ColStatusGet(const CDiffContext *pCtxt, const void *p, int)
 	{
 		s = strutils::format_string1(_("Does not exist in %1"),
 				pCtxt->GetNormalizedLeft());
+		bAddCompareFlags3WayString = true;
 	}
 	else if (nDirs > 2 && !di.diffcode.existsSecond())
 	{
 		s = strutils::format_string1(_("Does not exist in %1"),
 				pCtxt->GetNormalizedMiddle());
+		bAddCompareFlags3WayString = true;
 	}
 	else if (nDirs > 2 && !di.diffcode.existsThird())
 	{
 		s = strutils::format_string1(_("Does not exist in %1"),
 				pCtxt->GetNormalizedRight());
+		bAddCompareFlags3WayString = true;
 	}
 	else if (di.diffcode.isResultSame())
 	{
@@ -350,13 +417,15 @@ static String ColStatusGet(const CDiffContext *pCtxt, const void *p, int)
 		else
 			s = _("Files are different");
 		if (nDirs > 2)
+			bAddCompareFlags3WayString = true;
+	}
+	if (bAddCompareFlags3WayString)
+	{
+		switch (di.diffcode.diffcode & DIFFCODE::COMPAREFLAGS3WAY)
 		{
-			switch (di.diffcode.diffcode & DIFFCODE::COMPAREFLAGS3WAY)
-			{
-			case DIFFCODE::DIFF1STONLY: s += _("(Middle and right are identical)"); break;
-			case DIFFCODE::DIFF2NDONLY: s += _("(Left and right are identical)"); break;
-			case DIFFCODE::DIFF3RDONLY: s += _("(Left and middle are identical)"); break;
-			}
+		case DIFFCODE::DIFF1STONLY: s += _(" (Middle and right are identical)"); break;
+		case DIFFCODE::DIFF2NDONLY: s += _(" (Left and right are identical)"); break;
+		case DIFFCODE::DIFF3RDONLY: s += _(" (Left and middle are identical)"); break;
 		}
 	}
 	return s;
@@ -706,6 +775,140 @@ static String ColPluginPipelineGet(const CDiffContext* pCtxt, const void *p, int
 		return pInfoPrediffer ? pInfoPrediffer->GetPluginPipeline() : _T("");
 }
 
+#ifdef SHOW_DIFFITEM_DEBUG_INFO
+/**
+ * @brief Format "[Debug]diffcode" column data.
+ * @param [in] p Pointer to DIFFITEM.
+ * @return String to show in the column.
+ */
+static String ColDebugDiffCodeGet(const CDiffContext *, const void* p, int)
+{
+	const DIFFITEM& di = *static_cast<const DIFFITEM*>(p);
+	unsigned int diffcode = di.diffcode.diffcode;
+
+	String s = strutils::format(_T("0x%08x"), diffcode);
+
+	std::vector<String> flags;
+	if (diffcode & DIFFCODE::FIRST)
+		flags.push_back(_T("FIRST"));
+	if (diffcode & DIFFCODE::SECOND)
+		flags.push_back(_T("SECOND"));
+	if (diffcode & DIFFCODE::THIRD)
+		flags.push_back(_T("THIRD"));
+	if (diffcode & DIFFCODE::THREEWAY)
+		flags.push_back(_T("THREEWAY"));
+	if (diffcode & DIFFCODE::NEEDSCAN)
+		flags.push_back(_T("NEEDSCAN"));
+	if (diffcode & DIFFCODE::SKIPPED)
+		flags.push_back(_T("SKIPPED"));
+	switch (diffcode & DIFFCODE::COMPAREFLAGS3WAY)
+	{
+	case DIFFCODE::DIFF1STONLY: flags.push_back(_T("DIFF1STONLY")); break;
+	case DIFFCODE::DIFF2NDONLY: flags.push_back(_T("DIFF2NDONLY")); break;
+	case DIFFCODE::DIFF3RDONLY: flags.push_back(_T("DIFF3RDONLY")); break;
+	}
+	switch (diffcode & DIFFCODE::COMPAREFLAGS)
+	{
+	case DIFFCODE::DIFF: flags.push_back(_T("DIFF")); break;
+	case DIFFCODE::SAME: flags.push_back(_T("SAME")); break;
+	case DIFFCODE::CMPERR: flags.push_back(_T("CMPERR")); break;
+	case DIFFCODE::CMPABORT: flags.push_back(_T("CMPABORT")); break;
+	}
+	if (diffcode & DIFFCODE::FILE)
+		flags.push_back(_T("FILE"));
+	if (diffcode & DIFFCODE::DIR)
+		flags.push_back(_T("DIR"));
+	if (diffcode & DIFFCODE::TEXT)
+		flags.push_back(_T("TEXT"));
+	if (diffcode & DIFFCODE::BIN)
+		flags.push_back(_T("BIN"));
+	if (diffcode & DIFFCODE::BINSIDE1)
+		flags.push_back(_T("BINSIDE1"));
+	if (diffcode & DIFFCODE::BINSIDE2)
+		flags.push_back(_T("BINSIDE2"));
+	if (diffcode & DIFFCODE::BINSIDE3)
+		flags.push_back(_T("BINSIDE3"));
+	if (diffcode & DIFFCODE::IMAGE)
+		flags.push_back(_T("IMAGE"));
+
+	if (!flags.empty())
+	{
+		s += _T(" (");
+		for (size_t i = 0; i < flags.size(); i++)
+		{
+			s += flags[i];
+			if (i < flags.size() - 1)
+				s += _T(" ");
+		}
+		s += _T(")");
+	}
+
+	return s;
+}
+#endif // SHOW_DIFFITEM_DEBUG_INFO
+
+#ifdef SHOW_DIFFITEM_DEBUG_INFO
+/**
+ * @brief Format "[Debug]customFlags" column data.
+ * @param [in] p Pointer to DIFFITEM.
+ * @return String to show in the column.
+ */
+static String ColDebugCustomFlagsGet(const CDiffContext *, const void* p, int)
+{
+	const DIFFITEM& di = *static_cast<const DIFFITEM*>(p);
+	unsigned customFlags = di.customFlags;
+
+	String s = strutils::format(_T("0x%08x"), customFlags);
+
+	std::vector<String> flags;
+	if (customFlags & ViewCustomFlags::EXPANDED)
+		flags.push_back(_T("EXPANDED"));
+	if (customFlags & ViewCustomFlags::HIDDEN)
+		flags.push_back(_T("HIDDEN"));
+	if (customFlags & ViewCustomFlags::VISIBLE)
+		flags.push_back(_T("VISIBLE"));
+
+	if (!flags.empty())
+	{
+		s += _T(" (");
+		for (size_t i = 0; i < flags.size(); i++)
+		{
+			s += flags[i];
+			if (i < flags.size() - 1)
+				s += _T(" ");
+		}
+		s += _T(")");
+	}
+
+	return s;
+}
+#endif // SHOW_DIFFITEM_DEBUG_INFO
+
+#ifdef SHOW_DIFFITEM_DEBUG_INFO
+/**
+ * @brief Format "[Debug]this", "[Debug]parent", "[Debug]children", "[Debug]Flink" and "[Debug]Blink" column data.
+ * @param [in] p Pointer to DIFFITEM.
+ * @param [in] opt Type of data to show (0:"[Debug]this", 1:"[Debug]parent", 2:"[Debug]children", 3:"[Debug]Flink", 4:"[Debug]Blink")
+ * @return String to show in the column.
+ */
+static String ColDebugNodeGet(const CDiffContext *, const void* p, int opt)
+{
+	const DIFFITEM& di = *static_cast<const DIFFITEM*>(p);
+
+	const DIFFITEM* pdi = nullptr;
+	switch (opt)
+	{
+	case 0: pdi = &di; break;
+	case 1: pdi = di.GetParentLink(); break;
+	case 2: pdi = di.GetFirstChild(); break;
+	case 3: pdi = di.GetFwdSiblingLink(); break;
+	case 4: pdi = di.GetBackwardSiblingLink(); break;
+	}
+
+	return strutils::format(_T("%p"), pdi);
+}
+#endif // SHOW_DIFFITEM_DEBUG_INFO
+
 static String ColPropertyGet(const CDiffContext *pCtxt, const void *p, int opt)
 {
 	const DiffFileInfo &dfi = *static_cast<const DiffFileInfo *>(p);
@@ -905,7 +1108,7 @@ static int ColFileNameSort(const CDiffContext *pCtxt, const void *p, const void 
 		return -1;
 	if (!ldi.diffcode.isDirectory() && rdi.diffcode.isDirectory())
 		return 1;
-	return strutils::compare_nocase(ColFileNameGet<boost::flyweight<String> >(pCtxt, p, 0), ColFileNameGet<boost::flyweight<String> >(pCtxt, q, 0));
+	return strutils::compare_logical(ColFileNameGet<boost::flyweight<String>>(pCtxt, p, 0), ColFileNameGet<boost::flyweight<String>>(pCtxt, q, 0));
 }
 
 /**
@@ -923,7 +1126,7 @@ static int ColExtSort(const CDiffContext *pCtxt, const void *p, const void *q, i
 		return -1;
 	if (!ldi.diffcode.isDirectory() && rdi.diffcode.isDirectory())
 		return 1;
-	return strutils::compare_nocase(ColExtGet(pCtxt, p, 0), ColExtGet(pCtxt, q, 0));
+	return strutils::compare_logical(ColExtGet(pCtxt, p, 0), ColExtGet(pCtxt, q, 0));
 }
 
 /**
@@ -935,7 +1138,7 @@ static int ColExtSort(const CDiffContext *pCtxt, const void *p, const void *q, i
  */
 static int ColPathSort(const CDiffContext *pCtxt, const void *p, const void *q, int)
 {
-	return strutils::compare_nocase(ColPathGet(pCtxt, p, 0), ColPathGet(pCtxt, q, 0));
+	return strutils::compare_logical(ColPathGet(pCtxt, p, 0), ColPathGet(pCtxt, q, 0));
 }
 
 /**
@@ -1171,7 +1374,7 @@ static int ColPropertyDiffSort(const CDiffContext *pCtxt, const void *p, const v
 	bool snumeric = false;
 	String r2 = ColPropertyDiffGetEx(pCtxt, p, opt, false, rnumeric, &rnumdiff);
 	String s2 = ColPropertyDiffGetEx(pCtxt, q, opt, false, snumeric, &snumdiff);
-	int result = strutils::compare_nocase(r2, s2);
+	int result = strutils::compare_logical(r2, s2);
 	if (pCtxt->GetCompareDirs() == 2 && result == 0 && rnumeric && snumeric)
 	{
 		if (rnumdiff == snumdiff)
@@ -1191,7 +1394,7 @@ static int ColPropertyMoveSort(const CDiffContext *pCtxt, const void *p, const v
 {
 	String r2 = ColPropertyMoveGet(pCtxt, p, opt);
 	String s2 = ColPropertyMoveGet(pCtxt, q, opt);
-	return strutils::compare_nocase(r2, s2);
+	return strutils::compare_logical(r2, s2);
 }
 
 /* @} */
@@ -1243,6 +1446,15 @@ static DirColInfo f_cols[] =
 	{ _T("Reoltype"), nullptr, COLHDR_REOL_TYPE, COLDESC_REOL_TYPE, &ColEOLTypeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 1 },
 	{ _T("Unpacker"), nullptr, COLHDR_UNPACKER, COLDESC_UNPACKER, &ColPluginPipelineGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 1 },
 	{ _T("Prediffer"), nullptr, COLHDR_PREDIFFER, COLDESC_PREDIFFER, &ColPluginPipelineGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 0 },
+#ifdef SHOW_DIFFITEM_DEBUG_INFO
+	{ _T("diffcode"), nullptr, COLHDR_DEBUG_DIFFCODE, COLDESC_DEBUG_DIFFCODE, &ColDebugDiffCodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT },
+	{ _T("customFlags"), nullptr, COLHDR_DEBUG_CUSTOMFLAGS, COLDESC_DEBUG_CUSTOMFLAGS, &ColDebugCustomFlagsGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT },
+	{ _T("this"), nullptr, COLHDR_DEBUG_THIS, COLDESC_DEBUG_THIS, &ColDebugNodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 0 },
+	{ _T("parent"), nullptr, COLHDR_DEBUG_PARENT, COLDESC_DEBUG_PARENT, &ColDebugNodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 1 },
+	{ _T("children"), nullptr, COLHDR_DEBUG_CHILDREN, COLDESC_DEBUG_CHILDREN, &ColDebugNodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 2 },
+	{ _T("Flink"), nullptr, COLHDR_DEBUG_FLINK, COLDESC_DEBUG_FLINK, &ColDebugNodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 3 },
+	{ _T("Blink"), nullptr, COLHDR_DEBUG_BLINK, COLDESC_DEBUG_BLINK, &ColDebugNodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 4 },
+#endif // SHOW_DIFFITEM_DEBUG_INFO
 };
 static DirColInfo f_cols3[] =
 {
@@ -1281,6 +1493,15 @@ static DirColInfo f_cols3[] =
 	{ _T("Reoltype"), nullptr, COLHDR_REOL_TYPE, COLDESC_REOL_TYPE, &ColEOLTypeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 2 },
 	{ _T("Unpacker"), nullptr, COLHDR_UNPACKER, COLDESC_UNPACKER, &ColPluginPipelineGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 1 },
 	{ _T("Prediffer"), nullptr, COLHDR_PREDIFFER, COLDESC_PREDIFFER, &ColPluginPipelineGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 0 },
+#ifdef SHOW_DIFFITEM_DEBUG_INFO
+	{ _T("diffcode"), nullptr, COLHDR_DEBUG_DIFFCODE, COLDESC_DEBUG_DIFFCODE, &ColDebugDiffCodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT },
+	{ _T("customFlags"), nullptr, COLHDR_DEBUG_CUSTOMFLAGS, COLDESC_DEBUG_CUSTOMFLAGS, &ColDebugCustomFlagsGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT },
+	{ _T("this"), nullptr, COLHDR_DEBUG_THIS, COLDESC_DEBUG_THIS, &ColDebugNodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 0 },
+	{ _T("parent"), nullptr, COLHDR_DEBUG_PARENT, COLDESC_DEBUG_PARENT, &ColDebugNodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 1 },
+	{ _T("children"), nullptr, COLHDR_DEBUG_CHILDREN, COLDESC_DEBUG_CHILDREN, &ColDebugNodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 2 },
+	{ _T("Flink"), nullptr, COLHDR_DEBUG_FLINK, COLDESC_DEBUG_FLINK, &ColDebugNodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 3 },
+	{ _T("Blink"), nullptr, COLHDR_DEBUG_BLINK, COLDESC_DEBUG_BLINK, &ColDebugNodeGet, 0, 0, -1, true, DirColInfo::ALIGN_LEFT, 4 },
+#endif // SHOW_DIFFITEM_DEBUG_INFO
 };
 
 String DirColInfo::GetDisplayName() const
@@ -1749,7 +1970,7 @@ DirViewColItems::ColSort(const CDiffContext *pCtxt, int col, const DIFFITEM &ldi
 	{
 		String p = (*fnc)(pCtxt, arg1, opt);
 		String q = (*fnc)(pCtxt, arg2, opt);
-		return strutils::compare_nocase(p, q);
+		return strutils::compare_logical(p, q);
 	}
 	return 0;
 }
@@ -1845,7 +2066,7 @@ void DirViewColItems::LoadColumnOrders(const String& colOrders)
 {
 	ClearColumnOrders();
 	m_dispcols = 0;
-	std::basic_istringstream<TCHAR> ss(colOrders);
+	std::basic_istringstream<tchar_t> ss(colOrders);
 
 	// Load column orders
 	// Break out if one is missing

@@ -14,6 +14,7 @@
 #include <vector>
 #include <memory>
 #include "TrDialogs.h"
+#include "CMoveConstraint.h"
 #include "SuperComboBox.h"
 #include "UnicodeString.h"
 
@@ -40,7 +41,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CSelectPluginDlg)
 	enum { IDD = IDD_PLUGINS_SELECTPLUGIN };
-	CComboBox	m_cboPluginName;
+	CComboBoxEx	m_cboPluginName;
 	bool	m_bNoExtensionCheck;
 	bool	m_bOpenInSameFrameType;
 	String	m_strDescription;
@@ -48,6 +49,7 @@ public:
 	String	m_strArguments;
 	String	m_strPluginPipeline;
 	CSuperComboBox m_ctlPluginPipeline;
+	prdlg::CMoveConstraint m_constraint; //*< Resizes dialog controls when dialog resized */
 	
 	//}}AFX_DATA
 

@@ -21,6 +21,8 @@
 BEGIN_MESSAGE_MAP(CEditorFilePathBar, CDialogBar)
 	ON_NOTIFY_EX (TTN_NEEDTEXT, 0, OnToolTipNotify)
 	ON_CONTROL_RANGE (EN_SETFOCUS, IDC_STATIC_TITLE_PANE0, IDC_STATIC_TITLE_PANE2, OnSetFocusEdit)
+	ON_CONTROL_RANGE (EN_USER_CAPTION_CHANGED, IDC_STATIC_TITLE_PANE0, IDC_STATIC_TITLE_PANE2, OnChangeEdit)
+	ON_CONTROL_RANGE (EN_USER_FILE_SELECTED, IDC_STATIC_TITLE_PANE0, IDC_STATIC_TITLE_PANE2, OnSelectEdit)
 END_MESSAGE_MAP()
 
 
@@ -47,7 +49,7 @@ CEditorFilePathBar::~CEditorFilePathBar()
  */
 BOOL CEditorFilePathBar::Create(CWnd* pParentWnd)
 {
-	if (! CDialogBar::Create(pParentWnd, CEditorFilePathBar::IDD, 
+	if (! __super::Create(pParentWnd, CEditorFilePathBar::IDD, 
 			CBRS_ALIGN_TOP | CBRS_TOOLTIPS | CBRS_FLYBY, CEditorFilePathBar::IDD))
 		return FALSE;
 
@@ -56,11 +58,15 @@ BOOL CEditorFilePathBar::Create(CWnd* pParentWnd)
 		m_font.CreateFontIndirect(&ncm.lfStatusFont);
 
 	// subclass the two custom edit boxes
+	const int lpx = CClientDC(this).GetDeviceCaps(LOGPIXELSX);
+	auto pointToPixel = [lpx](int point) { return MulDiv(point, lpx, 72); };
+	int cx = -pointToPixel(ncm.lfStatusFont.lfHeight);
+	int m = pointToPixel(3);
 	for (int pane = 0; pane < static_cast<int>(std::size(m_Edit)); pane++)
 	{
 		m_Edit[pane].SubClassEdit(IDC_STATIC_TITLE_PANE0 + pane, this);
 		m_Edit[pane].SetFont(&m_font);
-		m_Edit[pane].SetMargins(4, 4);
+		m_Edit[pane].SetMargins(m, m + cx);
 	}
 	return TRUE;
 };
@@ -72,7 +78,10 @@ CSize CEditorFilePathBar::CalcFixedLayout(BOOL bStretch, BOOL bHorz)
 	CFont *pOldFont = dc.SelectObject(&m_font);
 	dc.GetTextMetrics(&tm);
 	dc.SelectObject(pOldFont);
-	return CSize(SHRT_MAX, tm.tmHeight + 6);
+	const int lpx = dc.GetDeviceCaps(LOGPIXELSX);
+	auto pointToPixel = [lpx](int point) { return MulDiv(point, lpx, 72); };
+	int cy = pointToPixel(4);
+	return CSize(SHRT_MAX, 1 + tm.tmHeight + cy);
 }
 
 /** 
@@ -88,7 +97,7 @@ void CEditorFilePathBar::Resize()
 
 	int widths[3] = {};
 	for (int pane = 0; pane < m_nPanes; pane++)
-		widths[pane] = (infoBar.rcNormalPosition.right / m_nPanes);
+		widths[pane] = (infoBar.rcNormalPosition.right / m_nPanes) - ((pane == 0) ? 7 : 5);
 	Resize(widths);
 }
 
@@ -155,7 +164,7 @@ BOOL CEditorFilePathBar::OnToolTipNotify(UINT id, NMHDR * pTTTStruct, LRESULT * 
 
 			// fill in the returned structure
 			CFilepathEdit * pItem = static_cast<CFilepathEdit*>(GetDlgItem(nID));
-			pTTT->lpszText = const_cast<TCHAR *>(pItem->GetUpdatedTipText(&tempDC, maxWidth).c_str());
+			pTTT->lpszText = const_cast<tchar_t *>(pItem->GetUpdatedTipText(&tempDC, maxWidth).c_str());
 
 			// set old font back
 			if (hOldFont != nullptr)
@@ -173,8 +182,26 @@ BOOL CEditorFilePathBar::OnToolTipNotify(UINT id, NMHDR * pTTTStruct, LRESULT * 
 
 void CEditorFilePathBar::OnSetFocusEdit(UINT id)
 {
-	if (m_callbackfunc)
-		m_callbackfunc(id - IDC_STATIC_TITLE_PANE0);
+	if (m_setFocusCallbackfunc)
+		m_setFocusCallbackfunc(id - IDC_STATIC_TITLE_PANE0);
+}
+
+void CEditorFilePathBar::OnChangeEdit(UINT id)
+{
+	const int pane = id - IDC_STATIC_TITLE_PANE0;
+	if (m_captionChangedCallbackfunc)
+	{
+		CString text;
+		m_Edit[pane].GetWindowText(text);
+		m_captionChangedCallbackfunc(pane, (const tchar_t*)text);
+	}
+}
+
+void CEditorFilePathBar::OnSelectEdit(UINT id)
+{
+	const int pane = id - IDC_STATIC_TITLE_PANE0;
+	(m_fileSelectedCallbackfunc ? m_fileSelectedCallbackfunc : m_folderSelectedCallbackfunc)
+		(pane, m_Edit[pane].GetSelectedPath());
 }
 
 /** 

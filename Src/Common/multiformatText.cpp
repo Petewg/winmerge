@@ -89,7 +89,7 @@ void storageForPlugins::SetDataFileUnknown(const String& filename, bool bOverwri
 	SetDataFileEncoding(filename, encoding, bOverwrite);
 }
 
-const TCHAR *storageForPlugins::GetDestFileName()
+const tchar_t *storageForPlugins::GetDestFileName()
 {
 	if (m_tempFilenameDst.empty())
 	{
@@ -221,7 +221,7 @@ void storageForPlugins::ValidateInternal(bool bNewIsFile, bool bNewIsUnicode)
 	}
 }
 
-const TCHAR *storageForPlugins::GetDataFileUnicode()
+const tchar_t *storageForPlugins::GetDataFileUnicode()
 {
 	if (m_bCurrentIsFile && m_bCurrentIsUnicode)
 		return m_filename.c_str();
@@ -348,7 +348,7 @@ BSTR * storageForPlugins::GetDataBufferUnicode()
 			int textRealSize = textForeseenSize;
 
 			// allocate the memory
-			std::unique_ptr<wchar_t[]> tempBSTR(new wchar_t[textForeseenSize]);
+			auto tempBSTR = std::make_unique<wchar_t[]>(textForeseenSize);
 
 			// fill in the data
 			wchar_t * pbstrBuffer = tempBSTR.get();
@@ -380,7 +380,7 @@ BSTR * storageForPlugins::GetDataBufferUnicode()
 	}
 }
 
-const TCHAR *storageForPlugins::GetDataFileAnsi()
+const tchar_t *storageForPlugins::GetDataFileAnsi()
 {
 	if (m_bCurrentIsFile && !m_bCurrentIsUnicode)
 		return m_filename.c_str();

@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WinMerge\n"
 "Report-Msgid-Bugs-To: https://bugs.winmerge.org/\n"
-"POT-Creation-Date: 2022-03-26 23:25+0000\n"
-"PO-Revision-Date: 2022-03-28 09:49+0200\n"
+"POT-Creation-Date: 2023-02-19 08:57+0000\n"
+"PO-Revision-Date: 2023-02-20 07:25+0200\n"
 "Last-Translator: Tichij <tichij@mail.com>\n"
 "Language-Team: Lithuanian <winmerge-translate@lists.sourceforge.net>\n"
 "Language: lt\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Poedit-Language: Lithuanian\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-Basepath: ../../Src/\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #. LANGUAGE, SUBLANGUAGE
 msgid "LANG_ENGLISH, SUBLANG_ENGLISH_US"
@@ -67,6 +67,9 @@ msgstr "Pažymėti &skirtumą"
 
 msgid "Add this change to Substitution &Filters"
 msgstr "Įtraukti šį skirtumą į Keitinių &filtrus"
+
+msgid "Add to &Line Filters"
+msgstr "Įtraukti į Ei&lutės filtrus"
 
 msgid "&Undo"
 msgstr "Atša&ukti"
@@ -217,6 +220,45 @@ msgstr "&Vektorinių vaizdų mastelio keitimas"
 msgid "Compare Extracted &Text From Images"
 msgstr "Lyginti iš paveikslėlių ištrauktą &tekstą"
 
+msgid "Co&mpare"
+msgstr "Ly&ginti"
+
+msgid "&Screenshots"
+msgstr "Ekrano kopija&s"
+
+msgid "&Full Size Screenshots"
+msgstr "&Viso dydžio ekrano kopijas"
+
+msgid "&HTMLs"
+msgstr "&HTML'us"
+
+msgid "&Texts"
+msgstr "&Tekstus"
+
+msgid "&Resource Trees"
+msgstr "&Resursų medžius"
+
+msgid "&Size"
+msgstr "Dydi&s"
+
+msgid "Fit to Window"
+msgstr "Talpinti į langą"
+
+msgid "Clear &Browsing Data"
+msgstr "Išvalyti &Naršymo duomenis"
+
+msgid "&Disk Cache"
+msgstr "&Disko talpykla"
+
+msgid "&Cookies"
+msgstr "&Slapukai"
+
+msgid "&Browsing History"
+msgstr "&Naršymo istorija"
+
+msgid "&All Profile"
+msgstr "Visi profili&ai"
+
 msgid "&File"
 msgstr "&Failas"
 
@@ -235,6 +277,9 @@ msgstr "&Binarinis"
 msgid "&Image"
 msgstr "Pave&ikslėlis"
 
+msgid "&Webpage"
+msgstr "Ti&nklapis"
+
 msgid "New (&3 panes)"
 msgstr "Naujas (&3 polangiai)"
 
@@ -245,7 +290,7 @@ msgid "Open Conflic&t File..."
 msgstr "Atver&ti konfliktų failą..."
 
 msgid "Open C&lipboard"
-msgstr ""
+msgstr "Atverti &mainų sritį"
 
 msgid "Open Pro&ject...\tCtrl+J"
 msgstr "Atverti pro&jektą...\tCtrl+J"
@@ -888,6 +933,9 @@ msgstr "Kopijuoti &failų vardus"
 msgid "Copy Items To Clip&board"
 msgstr "Kopijuoti elementus į iš&karpinę"
 
+msgid "Copy All Di&splayed Columns"
+msgstr "Kopijuoti visus rodomu&s stulpelius"
+
 msgid "&Zip"
 msgstr "&Zip"
 
@@ -920,6 +968,12 @@ msgstr "Kopijuoti pilną &kelią"
 
 msgid "Copy &Filename"
 msgstr "Kopijuoti &failo vardą"
+
+msgid "&Edit Caption"
+msgstr "R&edaguoti antraštę"
+
+msgid "&Open..."
+msgstr "&Atverti..."
 
 msgid "Unpacker Settings"
 msgstr "Išpakuotojo nuostatos"
@@ -1056,14 +1110,14 @@ msgstr "Rasti..."
 msgid " Folder: Filter"
 msgstr " Katalogams: Filtras"
 
+msgid " File: Prediffer Plugin"
+msgstr " Failams: Parengėjas"
+
 msgid " File: Unpacker Plugin"
 msgstr " Failams: Išpakuotojas"
 
 msgid "Se&lect..."
 msgstr "Pa&rinkti..."
-
-msgid "Co&mpare"
-msgstr "Ly&ginti"
 
 msgid "Cancel"
 msgstr "Atsisakyti"
@@ -1106,6 +1160,9 @@ msgstr "Užverti „Parinkite failus ar katalogus“ po „Lyginti“ paspaudimo
 
 msgid "Op&en-dialog Auto-Completion:"
 msgstr "Lango „Atv&erti“ automatinis užpildymas:"
+
+msgid "Auto-&reload modified files:"
+msgstr "Automatiškais &įkelti iš naujo pakeistus failus:"
 
 msgid "Language:"
 msgstr "Kalba:"
@@ -1866,11 +1923,14 @@ msgstr "Integr. Windows aplinkoje"
 msgid "Explorer"
 msgstr "„Explorer“'is"
 
+msgid "&Add to context menu"
+msgstr "&Pridėti į kontekstinį meniu"
+
 msgid "E&nable advanced menu"
 msgstr "Įju&ngti išplėstinį meniu"
 
-msgid "&Add to context menu"
-msgstr "&Pridėti į kontekstinį meniu"
+msgid "Enable &Compare As menu"
+msgstr "Įtraukti &Lyginti į meniu"
 
 msgid "&Register shell extension"
 msgstr "&Registruoti aplinkos plėtinį"
@@ -1915,8 +1975,8 @@ msgstr "Persijungimo į &spartųjį palyginimą riba (MB):"
 msgid "Threshold for switching to &binary compare (MB):"
 msgstr "Persijungimo į &binarinį palyginimą riba (MB):"
 
-msgid "\n&Number of compare threads (a negative value implies addition of the number of available CPU cores):"
-msgstr "\nLygi&nimo srautų skaičius (neigiama reikšmė reiškia turimų procesoriaus branduolių skaičiaus pridėjimą):"
+msgid "&Number of CPU cores to use:"
+msgstr "&Naudojamas procesoriaus branduolių skaičius:"
 
 msgid "&CSV File Patterns:"
 msgstr "&CSV failų šablonai:"
@@ -1960,6 +2020,21 @@ msgstr "Lyginti pav&eikslėlius lyginant katalogus"
 
 msgid "OCR result:"
 msgstr "Optinio ženklų atpažinimo (OCR) rezultatas:"
+
+msgid "Webpage"
+msgstr "Tinklalapių"
+
+msgid "URL pattern to &include (Regular expression):"
+msgstr "URL šablonas, ką įtraukt&i (Reguliarioji išraiška)"
+
+msgid "URL pattern to &exclude (Regular expression):"
+msgstr "URL šablonas, ką pašalinti (Reguliarioji išraiška)"
+
+msgid "&User data folder location:"
+msgstr "Na&udotojo duomenų katalogo vieta:"
+
+msgid "&Separate user data folders for each pane"
+msgstr "At&skiri naudotojo duomenų katalogai kiekvienam polangiui"
 
 msgid "&Hex View"
 msgstr "Žiūrėti &Hex režimu"
@@ -2164,6 +2239,9 @@ msgstr "Su pakatalogiais"
 
 msgid "Compare Options"
 msgstr "Lyginimo nuostatos"
+
+msgid "Hidden Items"
+msgstr "Paslėpti elementai"
 
 msgid "Name"
 msgstr "Pavadinimas"
@@ -2550,6 +2628,9 @@ msgstr "Patvirtinti perkėlimą"
 
 msgid "You are about to close the window that is comparing folders. Are you sure you want to close the window?"
 msgstr "Jūs ketinate užverti langą, kuriame lyginami katalogai. Ar tikrai norite užverti langą?"
+
+msgid "The file or folder name is invalid."
+msgstr "Netinkamas failo ar katalogo pavadinimas."
 
 #, c-format
 msgid "Failed to execute external editor: %1"
@@ -2952,6 +3033,10 @@ msgstr "Paruošėjo papildinio pavadinimas arba komandų grandinė."
 msgid "Compare %1 with %2"
 msgstr "Lyginti %1 su %2"
 
+#, c-format
+msgid "Compare %1 with %2 and %3"
+msgstr "Lyginti %1 su %2 ir %3"
+
 msgid "Comma-separated list"
 msgstr "Kableliais sudalintas sąrašas"
 
@@ -3305,6 +3390,9 @@ msgstr "Užverti k&itas korteles"
 msgid "Enable &Auto Max Width"
 msgstr "Įjungti &Automatinį maks. plotį"
 
+msgid "We&bpage"
+msgstr "Ti&nklapiai"
+
 msgid "Frhed is not installed."
 msgstr "„Frhed“ neįdiegtas."
 
@@ -3329,6 +3417,9 @@ msgstr "kantrus"
 
 msgid "histogram"
 msgstr "histograma"
+
+msgid "none"
+msgstr "joks"
 
 msgid "GDI"
 msgstr "GDI"
@@ -3483,11 +3574,23 @@ msgstr "Paeilutinė pozicija ir tekstas"
 msgid "Word-by-word position and text"
 msgstr "Pažodinė pozicija ir tekstas"
 
+msgid "AppData folder"
+msgstr "„AppData“ katalogas"
+
+msgid "Install folder"
+msgstr "Diegimo katalogas"
+
 msgid "Allow only one instance to run"
 msgstr "Leisti vykdyti tik vieną programos egzempliorių"
 
 msgid "Allow only one instance to run and wait for the instance to terminate"
 msgstr "Leisti vykdyti tik vieną programos egzempliorių ir sulaukti, kol jo vykdymas baigsis"
+
+msgid "Only on window activated"
+msgstr "Tik suaktyvinus langą"
+
+msgid "Immediately"
+msgstr "Nedelsiant"
 
 msgid "Al&l"
 msgstr "Visi"
@@ -3498,8 +3601,8 @@ msgstr "Sutvarkymas"
 msgid "Content Extraction"
 msgstr "Turinio ištraukimas"
 
-msgid "Visualization"
-msgstr "Vizualizavimas"
+msgid "Preview"
+msgstr "Peržiūra"
 
 msgid "Data Query"
 msgstr "Duomenų užklausa"
@@ -3594,8 +3697,14 @@ msgstr "Sutvarkyti XML"
 msgid "Prettify YAML"
 msgstr "Sutvarkyti YAML"
 
-msgid "Visualize Graphviz"
-msgstr "Vizualizuoti „Graphviz“"
+msgid "Preview Graphviz"
+msgstr "„Graphviz“ peržiūra"
+
+msgid "Preview Markdown"
+msgstr "„Markdown“ peržiūra"
+
+msgid "Preview PlantUML"
+msgstr "„PlantUML“ peržiūra"
 
 msgid "Query CSV Data..."
 msgstr "Pateikti CSV duomenų užklausą..."
@@ -3687,7 +3796,13 @@ msgstr ""
 msgid "YAML Prettier with yq command. \r\nArguments: Filter or command line options passed to the yq command."
 msgstr ""
 
-msgid "Graphviz Visualizer. \r\nArguments: Command line options passed to the dot command."
+msgid "Graphviz Previewer. \r\nArguments: Command line options passed to the dot command."
+msgstr ""
+
+msgid "Markdown Previewer. \r\nArguments: Command line options passed to the md2html command."
+msgstr ""
+
+msgid "PlantUML Previewer. \r\nArguments: Command line options passed to the plantuml.jar command."
 msgstr ""
 
 msgid "CSV Querier with q command. \r\nArguments: SQL statement or command line options passed to the q command."
@@ -3768,3 +3883,6 @@ msgstr "Ši sistema nepalaiko mainų srities istorijos."
 
 msgid "The 32-bit version of WinMerge does not support Clipboard Compare"
 msgstr "32 bitų „WinMerge“ versija nepalaiko lyginimo mainų srityje"
+
+msgid "WebView2 runtime is not installed. Do you want to download it?"
+msgstr "„WebView2“ vykdymo aplinka neįdiegta. Norite ją parsisiųsti?"

@@ -67,6 +67,9 @@ msgstr "&Marker linjeforskjell\tF4"
 msgid "Add this change to Substitution &Filters"
 msgstr ""
 
+msgid "Add to &Line Filters"
+msgstr ""
+
 msgid "&Undo"
 msgstr "&Angre"
 
@@ -216,6 +219,45 @@ msgstr ""
 msgid "Compare Extracted &Text From Images"
 msgstr ""
 
+msgid "Co&mpare"
+msgstr ""
+
+msgid "&Screenshots"
+msgstr ""
+
+msgid "&Full Size Screenshots"
+msgstr ""
+
+msgid "&HTMLs"
+msgstr ""
+
+msgid "&Texts"
+msgstr ""
+
+msgid "&Resource Trees"
+msgstr ""
+
+msgid "&Size"
+msgstr ""
+
+msgid "Fit to Window"
+msgstr ""
+
+msgid "Clear &Browsing Data"
+msgstr ""
+
+msgid "&Disk Cache"
+msgstr ""
+
+msgid "&Cookies"
+msgstr ""
+
+msgid "&Browsing History"
+msgstr ""
+
+msgid "&All Profile"
+msgstr ""
+
 msgid "&File"
 msgstr "&Fil"
 
@@ -233,6 +275,9 @@ msgstr "Bin&ær"
 
 msgid "&Image"
 msgstr "&Bilde"
+
+msgid "&Webpage"
+msgstr ""
 
 msgid "New (&3 panes)"
 msgstr "Ny (&3 paneler)"
@@ -887,6 +932,9 @@ msgstr "Kopier &filnavn"
 msgid "Copy Items To Clip&board"
 msgstr ""
 
+msgid "Copy All Di&splayed Columns"
+msgstr ""
+
 msgid "&Zip"
 msgstr "&Zip"
 
@@ -919,6 +967,12 @@ msgstr "&Kopier full bane"
 
 msgid "Copy &Filename"
 msgstr "Kopier &filnavn"
+
+msgid "&Edit Caption"
+msgstr ""
+
+msgid "&Open..."
+msgstr ""
 
 msgid "Unpacker Settings"
 msgstr ""
@@ -1055,13 +1109,13 @@ msgstr "Bla gjennom.."
 msgid " Folder: Filter"
 msgstr ""
 
+msgid " File: Prediffer Plugin"
+msgstr ""
+
 msgid " File: Unpacker Plugin"
 msgstr ""
 
 msgid "Se&lect..."
-msgstr ""
-
-msgid "Co&mpare"
 msgstr ""
 
 msgid "Cancel"
@@ -1105,6 +1159,9 @@ msgstr ""
 
 msgid "Op&en-dialog Auto-Completion:"
 msgstr "Auto-fullførelse for Å&pne-dialog:"
+
+msgid "Auto-&reload modified files:"
+msgstr ""
 
 msgid "Language:"
 msgstr ""
@@ -1878,11 +1935,14 @@ msgstr "Skall-integrasjon"
 msgid "Explorer"
 msgstr "Utforsker"
 
+msgid "&Add to context menu"
+msgstr "Le&gg til i høyreklikkmeny"
+
 msgid "E&nable advanced menu"
 msgstr "&Aktiver avansert meny"
 
-msgid "&Add to context menu"
-msgstr "Le&gg til i høyreklikkmeny"
+msgid "Enable &Compare As menu"
+msgstr ""
 
 msgid "&Register shell extension"
 msgstr ""
@@ -1927,10 +1987,7 @@ msgstr ""
 msgid "Threshold for switching to &binary compare (MB):"
 msgstr ""
 
-msgid ""
-"\n"
-"&Number of compare threads (a negative value implies addition of the number "
-"of available CPU cores):"
+msgid "&Number of CPU cores to use:"
 msgstr ""
 
 msgid "&CSV File Patterns:"
@@ -1974,6 +2031,21 @@ msgid "&Enable image compare in folder compare"
 msgstr ""
 
 msgid "OCR result:"
+msgstr ""
+
+msgid "Webpage"
+msgstr ""
+
+msgid "URL pattern to &include (Regular expression):"
+msgstr ""
+
+msgid "URL pattern to &exclude (Regular expression):"
+msgstr ""
+
+msgid "&User data folder location:"
+msgstr ""
+
+msgid "&Separate user data folders for each pane"
 msgstr ""
 
 msgid "&Hex View"
@@ -2245,6 +2317,9 @@ msgid "Include Subfolders"
 msgstr ""
 
 msgid "Compare Options"
+msgstr ""
+
+msgid "Hidden Items"
 msgstr ""
 
 msgid "Name"
@@ -2797,6 +2872,9 @@ msgid ""
 "you want to close the window?"
 msgstr ""
 
+msgid "The file or folder name is invalid."
+msgstr ""
+
 #, c-format
 msgid "Failed to execute external editor: %1"
 msgstr "Feilet i å kjøre eksternt redigeringsprogram: %1"
@@ -3205,6 +3283,10 @@ msgstr ""
 #, c-format
 msgid "Compare %1 with %2"
 msgstr "Sammenligning %1 med %2"
+
+#, c-format
+msgid "Compare %1 with %2 and %3"
+msgstr ""
 
 msgid "Comma-separated list"
 msgstr "Komma-separert liste"
@@ -3692,6 +3774,9 @@ msgstr ""
 msgid "Enable &Auto Max Width"
 msgstr ""
 
+msgid "We&bpage"
+msgstr ""
+
 msgid "Frhed is not installed."
 msgstr ""
 
@@ -3718,6 +3803,9 @@ msgid "patience"
 msgstr ""
 
 msgid "histogram"
+msgstr ""
+
+msgid "none"
 msgstr ""
 
 msgid "GDI"
@@ -3873,10 +3961,22 @@ msgstr ""
 msgid "Word-by-word position and text"
 msgstr ""
 
+msgid "AppData folder"
+msgstr ""
+
+msgid "Install folder"
+msgstr ""
+
 msgid "Allow only one instance to run"
 msgstr "Tillat bare en instans å kjøre"
 
 msgid "Allow only one instance to run and wait for the instance to terminate"
+msgstr ""
+
+msgid "Only on window activated"
+msgstr ""
+
+msgid "Immediately"
 msgstr ""
 
 msgid "Al&l"
@@ -3888,7 +3988,7 @@ msgstr ""
 msgid "Content Extraction"
 msgstr ""
 
-msgid "Visualization"
+msgid "Preview"
 msgstr ""
 
 msgid "Data Query"
@@ -3984,7 +4084,13 @@ msgstr ""
 msgid "Prettify YAML"
 msgstr ""
 
-msgid "Visualize Graphviz"
+msgid "Preview Graphviz"
+msgstr ""
+
+msgid "Preview Markdown"
+msgstr ""
+
+msgid "Preview PlantUML"
 msgstr ""
 
 msgid "Query CSV Data..."
@@ -4115,9 +4221,13 @@ msgid ""
 "Arguments: Filter or command line options passed to the yq command."
 msgstr ""
 
-msgid ""
-"Graphviz Visualizer. \r\n"
-"Arguments: Command line options passed to the dot command."
+msgid "Graphviz Previewer. \r\nArguments: Command line options passed to the dot command."
+msgstr ""
+
+msgid "Markdown Previewer. \r\nArguments: Command line options passed to the md2html command."
+msgstr ""
+
+msgid "PlantUML Previewer. \r\nArguments: Command line options passed to the plantuml.jar command."
 msgstr ""
 
 msgid ""
@@ -4224,4 +4334,7 @@ msgid "This system does not support clipboard history."
 msgstr ""
 
 msgid "The 32-bit version of WinMerge does not support Clipboard Compare"
+msgstr ""
+
+msgid "WebView2 runtime is not installed. Do you want to download it?"
 msgstr ""

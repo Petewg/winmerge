@@ -140,6 +140,7 @@ UPDATEITEM_TYPE UpdateDiffAfterOperation(const FileActionItem & act, CDiffContex
 DIFFITEM *FindItemFromPaths(const CDiffContext& ctxt, const PathContext& paths);
 
 bool IsItemCopyable(const DIFFITEM &di, int index);
+bool IsItemMovable(const DIFFITEM &di, int index);
 bool IsItemDeletable(const DIFFITEM &di, int index);
 bool IsItemDeletableOnBoth(const CDiffContext& ctxt, const DIFFITEM &di);
 bool AreItemsOpenable(const CDiffContext& ctxt, SELECTIONTYPE selectionType, const DIFFITEM &di1, const DIFFITEM &di2, bool openableForDir = true);
@@ -168,6 +169,8 @@ void SetDiffCompare(DIFFITEM& di, unsigned diffcode);
 void CopyDiffSideAndProperties(DIFFITEM& di, int src, int dst);
 void UnsetDiffSide(DIFFITEM& di, int index);
 void UpdateStatusFromDisk(CDiffContext& ctxt, DIFFITEM& di, int index);
+int UpdateCompareFlagsAfterSync(DIFFITEM& di, bool bRecursive);
+void UpdatePaths(int nDirs, DIFFITEM& di);
 void SetDiffCounts(DIFFITEM& di, unsigned diffs, unsigned ignored);
 void SetItemViewFlag(DIFFITEM& di, unsigned flag, unsigned mask);
 void SetItemViewFlag(CDiffContext& ctxt, unsigned flag, unsigned mask);
@@ -249,6 +252,27 @@ struct DirActions
 			return (i == m_ctxt.GetCompareDirs());
 		}
 		return false;
+	}
+
+	/**
+	 * @brief Return whether the specified diff item is renamable.
+	 * @param [in] di Diff item to check
+	 * @return true if the specified diff item is renamable.
+	 */
+	bool IsItemRenamable(const DIFFITEM& di) const
+	{
+		int nDirs = m_ctxt.GetCompareDirs();
+		for (int i = 0; i < nDirs; i++)
+			if (di.diffcode.exists(i) && m_RO[i])
+				return false;
+		return true;
+	}
+
+	template <SIDE_TYPE src, SIDE_TYPE dst>
+	bool IsItemMovableOnTo(const DIFFITEM& di) const
+	{
+		const int idx = SideToIndex(m_ctxt, src);
+		return (di.diffcode.diffcode != 0 && !m_RO[idx] && !m_RO[SideToIndex(m_ctxt, dst)] && ::IsItemMovable(di, idx));
 	}
 
 	template <SIDE_TYPE src>
@@ -365,6 +389,38 @@ struct DirActions
 	FileActionScript *Copy(FileActionScript *pscript, const std::pair<int, const DIFFITEM *>& it) const
 	{
 		return CopyItem(pscript, it, src, to);
+	}
+
+	FileActionScript *MoveItem(FileActionScript *pscript, const std::pair<int, const DIFFITEM *>& it, SIDE_TYPE src, SIDE_TYPE dst) const
+	{
+		const DIFFITEM& di = *it.second;
+		const int srcidx = SideToIndex(m_ctxt, src);
+		const int dstidx = SideToIndex(m_ctxt, dst);
+		if (di.diffcode.diffcode != 0 && !m_RO[dstidx] && IsItemMovable(di, srcidx))
+		{
+			FileActionItem act;
+			act.src  = GetItemFileName(m_ctxt, di, srcidx);
+			act.dest = GetItemFileName(m_ctxt, di, dstidx);
+			
+			// We must check that paths still exists
+			if (paths::DoesPathExist(act.src) == paths::DOES_NOT_EXIST)
+				throw ContentsChangedException(act.src);
+
+			act.context = it.first;
+			act.dirflag = di.diffcode.isDirectory();
+			act.atype = FileAction::ACT_MOVE;
+			act.UIResult = FileActionItem::UI_MOVE;
+			act.UIOrigin = srcidx;
+			act.UIDestination = dstidx;
+			pscript->AddActionItem(act);
+		}
+		return pscript;
+	}
+
+	template<SIDE_TYPE src, SIDE_TYPE to>
+	FileActionScript *Move(FileActionScript *pscript, const std::pair<int, const DIFFITEM *>& it) const
+	{
+		return MoveItem(pscript, it, src, to);
 	}
 
 	FileActionScript *DeleteItem(FileActionScript *pscript, const std::pair<int, const DIFFITEM *>& it, SIDE_TYPE src) const

@@ -19,20 +19,18 @@
 #include "paths.h"
 #include "FileOrFolderSelect.h"
 #include "OptionsSyntaxColors.h"
+#include "LineFiltersList.h"
+#include "SubstitutionFiltersList.h"
+#include "Constants.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-/**
- * @brief Location for file compare specific help to open.
- */
-static TCHAR OptionsHelpLocation[] = _T("::/htmlhelp/Configuration.html");
-
 /////////////////////////////////////////////////////////////////////////////
 // CPreferencesDlg dialog
 
-const TCHAR PATHDELIM = '>';
+const tchar_t PATHDELIM = '>';
 
 CPreferencesDlg::CPreferencesDlg(COptionsMgr *regOptions, SyntaxColors *colors,
 		UINT nMenuID /*= 0*/, CWnd* pParent /*= nullptr*/)   // standard constructor
@@ -60,6 +58,7 @@ CPreferencesDlg::CPreferencesDlg(COptionsMgr *regOptions, SyntaxColors *colors,
 , m_pageCompareTable(regOptions)
 , m_pageCompareBinary(regOptions)
 , m_pageCompareImage(regOptions)
+, m_pageCompareWebPage(regOptions)
 {
 	UNREFERENCED_PARAMETER(nMenuID);
 }
@@ -107,6 +106,7 @@ BOOL CPreferencesDlg::OnInitDialog()
 	AddPage(&m_pageCompareTable, IDS_OPTIONSPG_COMPARE, IDS_OPTIONSPG_TABLECOMPARE);
 	AddPage(&m_pageCompareBinary, IDS_OPTIONSPG_COMPARE, IDS_OPTIONSPG_BINARYCOMPARE);
 	AddPage(&m_pageCompareImage, IDS_OPTIONSPG_COMPARE, IDS_OPTIONSPG_IMAGECOMPARE);
+	AddPage(&m_pageCompareWebPage, IDS_OPTIONSPG_COMPARE, IDS_OPTIONSPG_WEBPAGECOMPARE);
 	AddPage(&m_pageMessageBoxes, IDS_OPTIONSPG_MESSAGEBOXES);
 	AddPage(&m_pageEditor, IDS_OPTIONSPG_EDITOR, IDS_OPTIONSPG_GENEDITOR);
 	AddPage(&m_pageEditorSyntax, IDS_OPTIONSPG_EDITOR, IDS_OPTIONSPG_EDITOR_SYNTAX);
@@ -182,7 +182,7 @@ void CPreferencesDlg::AddPage(CPropertyPage* pPage, UINT nTopHeading, UINT nSubH
 	AddPage(pPage, sPath.c_str());
 }
 
-void CPreferencesDlg::AddPage(CPropertyPage* pPage, LPCTSTR szPath)
+void CPreferencesDlg::AddPage(CPropertyPage* pPage, const tchar_t* szPath)
 {
 	if (m_pphost.AddPage(pPage))
 	{
@@ -238,7 +238,7 @@ void CPreferencesDlg::OnSelchangedPages(NMHDR* pNMHDR, LRESULT* pResult)
 		m_pphost.SetActivePage(pPage, false);
 
 		// update caption
-		String sCaption = strutils::format_string1(_("Options (%1)"), (LPCTSTR)GetItemPath(htiSel));
+		String sCaption = strutils::format_string1(_("Options (%1)"), (const tchar_t*)GetItemPath(htiSel));
 		SetWindowText(sCaption.c_str());
 	}
 
@@ -292,6 +292,7 @@ void CPreferencesDlg::ReadOptions(bool bUpdate)
 	m_pageCompareTable.ReadOptions();
 	m_pageCompareBinary.ReadOptions();
 	m_pageCompareImage.ReadOptions();
+	m_pageCompareWebPage.ReadOptions();
 	m_pageMessageBoxes.ReadOptions();
 	m_pageEditor.ReadOptions();
 	m_pageEditorSyntax.ReadOptions();
@@ -339,6 +340,7 @@ void CPreferencesDlg::SaveOptions()
 	m_pageCompareTable.WriteOptions();
 	m_pageCompareBinary.WriteOptions();
 	m_pageCompareImage.WriteOptions();
+	m_pageCompareWebPage.WriteOptions();
 	m_pageMessageBoxes.WriteOptions();
 	m_pageEditor.WriteOptions();
 	m_pageEditorSyntax.WriteOptions();
@@ -366,6 +368,9 @@ void CPreferencesDlg::OnImportButton()
 		if (m_pOptionsMgr->ImportOptions(s) == COption::OPT_OK)
 		{
 			Options::SyntaxColors::Load(m_pOptionsMgr, m_pSyntaxColors);
+			theApp.m_pLineFilters->Initialize(GetOptionsMgr());
+			theApp.m_pSubstitutionFiltersList->Initialize(GetOptionsMgr());
+
 			ReadOptions(true);
 			LangMessageBox(IDS_OPT_IMPORT_DONE, MB_ICONINFORMATION);
 		}

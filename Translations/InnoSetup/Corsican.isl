@@ -2,6 +2,8 @@
 ;
 ;     History of Corsican translations:
 ;
+;     - Updated on February 15th, 2023 for version 2.16.28 by Patriccollu di Santa Maria è Sichè
+;     - Updated on April 25th, 2022 for version 2.16.20 by Patriccollu di Santa Maria è Sichè
 ;     - Created on December 6th, 2021 for version 2.16.17 by Patriccollu di Santa Maria è Sichè
 
 [CustomMessages]
@@ -20,11 +22,7 @@ CustomInstallation=Installazione persunalizata
 AppCoreFiles=Schedarii impurtantissimi di WinMerge
 Filters=Filtri
 Plugins=Moduli d’estensione
-Frhed=Frhed (editore esadecimale di rigalu)
-WinIMerge=WinIMerge (Sfarenza/Fusione di fiure)
-ArchiveSupport=Permette l’archiviera
 ShellExtension32bit=Listinu cuntestuale WinMerge 32-bit
-Commands=Patch GnuWin32 per Windows/HTML Tidy/jq
 
 ;Localization Components
 Languages=Lingue
@@ -87,7 +85,8 @@ UsersGuide=Guida di l’utilizatore
 ViewStartMenuFolder=&Fighjà u cartulare di u listinu « Démarrer » di WinMerge
 
 ;Code Dialogs
-DeletePreviousStartMenu=U stalladore hà vistu chì u listinu « Démarrer » hè statu dispiazzatu da « %s » ver di « %s ». Vulete squassà u cartulare precedente di u listinu « Démarrer » ?
+DeletePreviousStartMenu=U stalladore hà vistu chì u listinu « Démarrer » hè statu dispiazzatu da « %s » versu « %s ». Vulete squassà u cartulare precedente di u listinu « Démarrer » ?
+ExplorerNeedsRestart=U listinu cuntestuale di WinMerge richiede un rilanciu di l’espluratore per mette à livellu. Vulete rilancià l’espluratore ?
 
 ; Project file description
 ProjectFileDesc=Schedariu di prughjettu WinMerge
