@@ -1,3 +1,5 @@
+// Copyright (c) 2023 Takashi Sawanaka
+// SPDX-License-Identifier: BSL-1.0
 #pragma once
 
 #include <cstring>
@@ -5,6 +7,7 @@
 #include <cstdarg>
 
 #if defined(_WIN32)
+#define STRSAFE_NO_DEPRECATE
 #include <strsafe.h>
 #define strcasecmp _stricmp
 #define strncasecmp _strnicmp

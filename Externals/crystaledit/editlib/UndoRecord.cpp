@@ -4,12 +4,9 @@
  * @brief Implementation of UndoRecord struct.
  */
 
-#include "stdafx.h"
+#include "pch.h"
 #include "UndoRecord.h"
-
-#ifdef _DEBUG
-#define new DEBUG_NEW
-#endif
+#include <cassert>
 
 void UndoRecord::
 Clone(const UndoRecord &src)
@@ -19,12 +16,11 @@ Clone(const UndoRecord &src)
     m_ptEndPos = src.m_ptEndPos;
     m_nAction = src.m_nAction;
     SetText(src.GetText(), src.GetTextLength());
-    intptr_t size = src.m_paSavedRevisionNumbers->GetSize();
+    size_t size = src.m_paSavedRevisionNumbers ? src.m_paSavedRevisionNumbers->size() : 0;
     if (m_paSavedRevisionNumbers == nullptr)
-      m_paSavedRevisionNumbers = new CDWordArray();
-    m_paSavedRevisionNumbers->SetSize(size);
-    intptr_t i;
-    for (i = 0; i < size; i++)
+      m_paSavedRevisionNumbers = new std::vector<uint32_t>();
+    m_paSavedRevisionNumbers->resize(size);
+    for (size_t i = 0; i < size; i++)
       (*m_paSavedRevisionNumbers)[i] = (*src.m_paSavedRevisionNumbers)[i];
   }
 
@@ -34,7 +30,7 @@ SetText (const tchar_t* pszText, size_t nLength)
   FreeText();
   if (nLength != 1)
     {
-      ASSERT (nLength < INT_MAX);
+      assert (nLength < INT_MAX);
       m_pszText = reinterpret_cast<TextBuffer *>(malloc(sizeof(TextBuffer) + (nLength+2) * sizeof(tchar_t)));
       if (m_pszText != nullptr)
         {

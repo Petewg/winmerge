@@ -31,28 +31,15 @@
 
 #pragma once
 
-#include <vector>
+#include "parsers/crystallineparser.h"
 #include "LineInfo.h"
 #include "UndoRecord.h"
-#include "ccrystaltextview.h"
+#include "cepoint.h"
+#include <memory>
+#include <vector>
+#include <list>
 
-#ifndef __AFXTEMPL_H__
-#pragma message("Include <afxtempl.h> in your stdafx.h to avoid this message")
-#include <afxtempl.h>
-#endif
-
-enum LINEFLAGS: unsigned long
-{
-  LF_BOOKMARK_FIRST = 0x00000001UL,
-  LF_EXECUTION = 0x00010000UL,
-  LF_BREAKPOINT = 0x00020000UL,
-  LF_COMPILATION_ERROR = 0x00040000UL,
-  LF_BOOKMARKS = 0x00080000UL,
-  LF_INVALID_BREAKPOINT = 0x00100000UL,
-  LF_INVISIBLE = 0x80000000UL
-};
-
-#define LF_BOOKMARK(id)     (LF_BOOKMARK_FIRST << id)
+class CCrystalTextView;
 
 enum class CRLFSTYLE
 {
@@ -96,22 +83,20 @@ enum
 class EDITPADC_CLASS CUpdateContext
   {
 public :
-    virtual void RecalcPoint (CPoint & ptPoint) = 0;
+    virtual void RecalcPoint (CEPoint & ptPoint) = 0;
   };
 
 
 /////////////////////////////////////////////////////////////////////////////
 // CCrystalTextBuffer command target
 
-class EDITPADC_CLASS CCrystalTextBuffer : public CCmdTarget
+class EDITPADC_CLASS CCrystalTextBuffer
   {
 public:
-    DECLARE_DYNCREATE (CCrystalTextBuffer)
-
     int m_nSourceEncoding;
     static int m_nDefaultEncoding;
-    DWORD m_dwCurrentRevisionNumber;
-    DWORD m_dwRevisionNumberOnSave;
+    uint32_t m_dwCurrentRevisionNumber;
+    uint32_t m_dwRevisionNumberOnSave;
     bool IsTextBufferInitialized () const { return m_bInit; }
 
 protected :
@@ -123,27 +108,22 @@ protected :
     bool m_bCreateBackupFile;
     bool m_bInsertTabs;
     int  m_nTabSize;
-    int FindLineWithFlag (DWORD dwFlag) const;
+    int FindLineWithFlag (lineflags_t dwFlag) const;
 
 protected :
-    enum : unsigned
-    {
-      UNDO_INSERT = 0x0001U,
-      UNDO_BEGINGROUP = 0x0100U
-    };
 
 class EDITPADC_CLASS CInsertContext : public CUpdateContext
       {
 public :
-        CPoint m_ptStart, m_ptEnd;
-        virtual void RecalcPoint (CPoint & ptPoint);
+        CEPoint m_ptStart, m_ptEnd;
+        virtual void RecalcPoint (CEPoint & ptPoint);
       };
 
 class EDITPADC_CLASS CDeleteContext : public CUpdateContext
       {
 public :
-        CPoint m_ptStart, m_ptEnd;
-        virtual void RecalcPoint (CPoint & ptPoint);
+        CEPoint m_ptStart, m_ptEnd;
+        virtual void RecalcPoint (CEPoint & ptPoint);
       };
 
     //  Lines of text
@@ -157,11 +137,11 @@ public :
 
     //BEGIN SW
     /** Position where the last change was made. */
-    CPoint m_ptLastChange;
+    CEPoint m_ptLastChange;
     //END SW
 
     //  Connected views
-    CList < CCrystalTextView *, CCrystalTextView * >m_lpViews;
+    std::list < CCrystalTextView * > m_lpViews;
 
     // Table Editing
     bool m_bTableEditing;
@@ -184,18 +164,18 @@ public :
     //  Implementation
     bool InternalInsertText (CCrystalTextView * pSource, int nLine, int nPos, const tchar_t* pszText, size_t cchText, int &nEndLine, int &nEndChar);
     bool InternalDeleteText (CCrystalTextView * pSource, int nStartLine, int nStartPos, int nEndLine, int nEndPos);
-    CString StripTail (int i, size_t bytes);
+    std::basic_string<tchar_t> StripTail (int i, size_t bytes);
 
     //  [JRT] Support For Descriptions On Undo/Redo Actions
-    virtual void AddUndoRecord (bool bInsert, const CPoint & ptStartPos, const CPoint & ptEndPos,
-                                const tchar_t* pszText, size_t cchText, int nActionType = CE_ACTION_UNKNOWN, CDWordArray *paSavedRevisionNumbers = nullptr);
+    virtual void AddUndoRecord (bool bInsert, const CEPoint & ptStartPos, const CEPoint & ptEndPos,
+                                const tchar_t* pszText, size_t cchText, int nActionType = CE_ACTION_UNKNOWN, std::vector<uint32_t> *paSavedRevisionNumbers = nullptr);
     virtual UndoRecord GetUndoRecord (int nUndoPos) const { return m_aUndoBuf[nUndoPos]; }
 
-    virtual CDWordArray *CopyRevisionNumbers(int nStartLine, int nEndLine) const;
-    virtual void RestoreRevisionNumbers(int nStartLine, CDWordArray *psaSavedRevisionNumbers);
+    virtual std::vector<uint32_t> *CopyRevisionNumbers(int nStartLine, int nEndLine) const;
+    virtual void RestoreRevisionNumbers(int nStartLine, std::vector<uint32_t> *psaSavedRevisionNumbers);
 
     //  Overridable: provide action description
-    virtual bool GetActionDescription (int nAction, CString & desc) const;
+    virtual bool GetActionDescription (int nAction, std::basic_string<tchar_t>& desc) const;
 
     // Operations
 public :
@@ -234,15 +214,15 @@ public :
     const tchar_t* GetLineEol (int nLine) const;
     bool ChangeLineEol (int nLine, const tchar_t* lpEOL);
     const tchar_t* GetLineChars (int nLine) const;
-    DWORD GetLineFlags (int nLine) const;
-    DWORD GetLineRevisionNumber (int nLine) const;
-    int GetLineWithFlag (DWORD dwFlag) const;
-    void SetLineFlag (int nLine, DWORD dwFlag, bool bSet,
+    lineflags_t GetLineFlags (int nLine) const;
+    uint32_t GetLineRevisionNumber (int nLine) const;
+    int GetLineWithFlag (lineflags_t dwFlag) const;
+    void SetLineFlag (int nLine, lineflags_t dwFlag, bool bSet,
             bool bRemoveFromPreviousLine = true, bool bUpdate=true);
     void GetText (int nStartLine, int nStartChar, int nEndLine, int nEndChar,
-            CString & text, const tchar_t* pszCRLF = nullptr, bool bExcludeInvisibleLines = true) const;
+            std::basic_string<tchar_t>& text, const tchar_t* pszCRLF = nullptr, bool bExcludeInvisibleLines = true) const;
     virtual void GetTextWithoutEmptys (int nStartLine, int nStartChar,
-            int nEndLine, int nEndChar, CString &text,
+            int nEndLine, int nEndChar, std::basic_string<tchar_t>& text,
             CRLFSTYLE nCrlfStyle = CRLFSTYLE::AUTOMATIC, bool bExcludeInvisibleLines = true) const;
     virtual bool IsIndentableLine(int nLine) const { return true; }
 
@@ -266,9 +246,9 @@ public :
     //  Undo/Redo
     bool CanUndo () const;
     bool CanRedo () const;
-    virtual bool Undo (CCrystalTextView * pSource, CPoint & ptCursorPos);
-    virtual bool UndoInsert (CCrystalTextView * pSource, CPoint & ptCursorPos, const CPoint apparent_ptStartPos, CPoint const apparent_ptEndPos, const UndoRecord & ur);
-    virtual bool Redo (CCrystalTextView * pSource, CPoint & ptCursorPos);
+    virtual bool Undo (CCrystalTextView * pSource, CEPoint & ptCursorPos);
+    virtual bool UndoInsert (CCrystalTextView * pSource, CEPoint & ptCursorPos, const CEPoint apparent_ptStartPos, CEPoint const apparent_ptEndPos, const UndoRecord & ur);
+    virtual bool Redo (CCrystalTextView * pSource, CEPoint & ptCursorPos);
 
     //  Undo grouping
     virtual void BeginUndoGroup (bool bMergeWithPrevious = false);
@@ -278,17 +258,17 @@ public :
     /**
     Returns the position where the last changes where made.
     */
-    CPoint GetLastChangePos() const;
+    CEPoint GetLastChangePos() const;
     //END SW
-    void RestoreLastChangePos(CPoint pt);
+    void RestoreLastChangePos(CEPoint pt);
     void DeleteLine(int line, int nCount = 1);
 
 
     //  Browse undo sequence
-    POSITION GetUndoActionCode (int & nAction, POSITION pos = nullptr) const;
-    POSITION GetRedoActionCode (int & nAction, POSITION pos = nullptr) const;
-    POSITION GetUndoDescription (CString & desc, POSITION pos = nullptr) const;
-    POSITION GetRedoDescription (CString & desc, POSITION pos = nullptr) const;
+    size_t GetUndoActionCode (int & nAction, size_t pos = 0) const;
+    size_t GetRedoActionCode (int & nAction, size_t pos = 0) const;
+    size_t GetUndoDescription (std::basic_string<tchar_t>& desc, size_t pos = 0) const;
+    size_t GetRedoDescription (std::basic_string<tchar_t>& desc, size_t pos = 0) const;
 
     //  Notify all connected views about changes in name of file
     CrystalLineParser::TextDefinition *RetypeViews (const tchar_t* lpszFileName);
@@ -317,7 +297,7 @@ public :
     const std::vector<int>& GetColumnWidths () const { return m_pSharedTableProps->m_aColumnWidths; }
     void SetColumnWidths (const std::vector<int>& columnWidths);
     int  GetColumnCount (int nLineIndex) const;
-    CString GetCellText (int nLineIndex, int nColumnIndex) const;
+    std::basic_string<tchar_t> GetCellText (int nLineIndex, int nColumnIndex) const;
     void SetAllowNewlinesInQuotes (bool bAllowNewlinesInQuotes) { m_bAllowNewlinesInQuotes = bAllowNewlinesInQuotes; }
     tchar_t GetAllowNewlinesInQuotes () const { return m_bAllowNewlinesInQuotes; }
     void SetFieldDelimiter (tchar_t cFieldDelimiter) { m_cFieldDelimiter = cFieldDelimiter; }
@@ -339,13 +319,6 @@ public :
     // ClassWizard generated virtual function overrides
     //{{AFX_VIRTUAL(CCrystalTextBuffer)
     //}}AFX_VIRTUAL
-
-
-    // Generated message map functions
-    //{{AFX_MSG(CCrystalTextBuffer)
-    //}}AFX_MSG
-
-    DECLARE_MESSAGE_MAP ()
   };
 
 

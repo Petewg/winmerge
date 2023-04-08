@@ -8,14 +8,23 @@
 #pragma once
 
 #include "utils/ctchar.h"
+#include "cepoint.h"
+#include <vector>
+
+typedef uint32_t undoflags_t;
+enum : undoflags_t
+{
+    UNDO_INSERT = 0x0001U,
+    UNDO_BEGINGROUP = 0x0100U
+};
 
 class UndoRecord
 {
 public:
-  DWORD m_dwFlags;
-  CPoint m_ptStartPos, m_ptEndPos;  //  Block of text participating
+  undoflags_t m_dwFlags;
+  CEPoint m_ptStartPos, m_ptEndPos;  //  Block of text participating
   int m_nAction;            //  For information only: action type
-  CDWordArray *m_paSavedRevisionNumbers;
+  std::vector<uint32_t> *m_paSavedRevisionNumbers;
 
 private:
   //  tchar_t   *m_pcText;

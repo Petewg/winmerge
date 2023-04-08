@@ -10,16 +10,17 @@
  */
 #pragma once
 
+#include "IMergeDoc.h"
 #include "DiffTextBuffer.h"
-#include <vector>
-#include <map>
-#include <memory>
-#include <optional>
 #include "DiffWrapper.h"
 #include "DiffList.h"
 #include "TempFile.h"
 #include "PathContext.h"
-#include "IMergeDoc.h"
+#include "FileLoadResult.h"
+#include <vector>
+#include <map>
+#include <memory>
+#include <optional>
 
 /**
  * @brief Additional action codes for WinMerge.
@@ -101,8 +102,8 @@ struct CurrentWordDiff
 	int nDiff;
 	size_t nWordDiff;
 	int nPane;
-	CPoint ptStart;
-	CPoint ptEnd;
+	CEPoint ptStart;
+	CEPoint ptEnd;
 };
 
 struct DiffFileInfo;
@@ -154,7 +155,7 @@ public:
 	void UpdateResources();
 	bool OpenDocs(int nFiles, const FileLocation fileloc[],
 		const bool bRO[], const String strDesc[]);
-	int LoadFile(CString sFileName, int nBuffer, bool & readOnly, const FileTextEncoding & encoding);
+	int LoadFile(const String& sFileName, int nBuffer, bool & readOnly, const FileTextEncoding & encoding);
 	void MoveOnLoad(int nPane = -1, int nLinIndex = -1, bool bRealLine = false, int nCharIndex = -1);
 	void ChangeFile(int nBuffer, const String& path, int nLineIndex = -1);
 	void RescanIfNeeded(float timeOutInSecond);
@@ -268,7 +269,7 @@ public:
 	std::vector<WordDiff> GetWordDiffArrayInRange(const int begin[3], const int end[3], int pane1 = -1, int pane2 = -1);
 	void ClearWordDiffCache(int nDiff = -1);
 private:
-	void Computelinediff(CMergeEditView *pView, CRect rc[], bool bReversed);
+	void Computelinediff(CMergeEditView *pView, std::pair<CEPoint, CEPoint> rc[], bool bReversed);
 	std::map<int, std::vector<WordDiff> > m_cacheWordDiffs;
 // End MergeDocLineDiffs.cpp
 
@@ -288,7 +289,7 @@ public:
 	void SetCurrentDiff(int nDiff);
 	int GetCurrentDiff() const { return m_nCurDiff; }
 	const CurrentWordDiff& GetCurrentWordDiff() const { return m_CurWordDiff; }
-	bool EqualCurrentWordDiff(int nBuffer, const CPoint& ptStart, const CPoint& ptEnd) const
+	bool EqualCurrentWordDiff(int nBuffer, const CEPoint& ptStart, const CEPoint& ptEnd) const
 	{
 		return (m_CurWordDiff.nPane == nBuffer && m_CurWordDiff.ptStart == ptStart && m_CurWordDiff.ptEnd == ptEnd);
 	}
@@ -332,7 +333,7 @@ private:
 	bool GetByteColoringOption() const;
 	bool IsValidCodepageForMergeEditor(unsigned cp) const;
 	void SanityCheckCodepage(FileLocation & fileinfo);
-	DWORD LoadOneFile(int index, const String& filename, bool readOnly, const String& strDesc, const FileTextEncoding & encoding);
+	FileLoadResult::flags_t LoadOneFile(int index, const String& filename, bool readOnly, const String& strDesc, const FileTextEncoding & encoding);
 	void SetTableProperties();
 
 // Implementation data

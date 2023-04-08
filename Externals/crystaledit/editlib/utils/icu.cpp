@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: BSL-1.0
+// Copyright (c) 2019 Takashi Sawanaka
 #include "StdAfx.h"
 #define ICU_EXTERN
 #include "icu.hpp"
@@ -38,6 +40,9 @@ public:
 		if (m_hLibrary)
 			FreeLibrary(m_hLibrary);
 	}
+	ICULoaderImpl(const ICULoaderImpl &) = delete;
+	ICULoaderImpl & operator=(const ICULoaderImpl &) = delete;
+
 	bool IsLoaded() { return m_hLibrary != nullptr && ubrk_open != nullptr; }
 private:
 	HMODULE m_hLibrary = nullptr;

@@ -355,6 +355,8 @@ IMergeDoc::FileChange CImgMergeFrame::IsFileChangedOnDisk(int pane) const
 
 void CImgMergeFrame::CheckFileChanged(void)
 {
+	if (!m_pImgMergeWindow)
+		return;
 	for (int pane = 0; pane < m_pImgMergeWindow->GetPaneCount(); ++pane)
 	{
 		if (IsFileChangedOnDisk(pane) == FileChange::Changed)
@@ -976,7 +978,7 @@ void CImgMergeFrame::OnUpdateFileReadOnlyRight(CCmdUI* pCmdUI)
 void CImgMergeFrame::OnFileRecompareAs(UINT nID)
 {
 	PathContext paths = m_filePaths;
-	DWORD dwFlags[3];
+	fileopenflags_t dwFlags[3];
 	String strDesc[3];
 	int nBuffers = m_filePaths.GetSize();
 	PackingInfo infoUnpacker(m_infoUnpacker.GetPluginPipeline());
@@ -1011,7 +1013,7 @@ void CImgMergeFrame::OnOpenWithUnpacker()
 	{
 		PackingInfo infoUnpacker(dlg.GetPluginPipeline());
 		PathContext paths = m_filePaths;
-		DWORD dwFlags[3] = { FFILEOPEN_NOMRU, FFILEOPEN_NOMRU, FFILEOPEN_NOMRU };
+		fileopenflags_t dwFlags[3] = { FFILEOPEN_NOMRU, FFILEOPEN_NOMRU, FFILEOPEN_NOMRU };
 		String strDesc[3] = { m_strDesc[0], m_strDesc[1], m_strDesc[2] };
 		CloseNow();
 		GetMainFrame()->DoFileOrFolderOpen(&paths, dwFlags, strDesc, _T(""),

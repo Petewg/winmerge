@@ -29,6 +29,7 @@
 #include "ccrystaltextview.h"
 #include "ccrystaltextbuffer.h"
 #include "wispelld.h"
+#include "cepoint.h"
 
 /////////////////////////////////////////////////////////////////////////////
 //  Forward class declarations
@@ -47,7 +48,6 @@ class EDITPADC_CLASS CCrystalEditView : public CCrystalTextView
 
 public :
     int m_nLastReplaceLen;
-    CMap<CString, const tchar_t*, CString, const tchar_t*> *m_mapExpand;
 
     static HMODULE hSpellDll;
     static tchar_t szWIspellPath[_MAX_PATH];
@@ -61,16 +61,16 @@ public :
 
 protected:
     bool m_bLastReplace;
-    DWORD m_dwLastReplaceFlags;
+    findtext_flags_t m_dwLastReplaceFlags;
     CEditReplaceDlg *m_pEditReplaceDlg;
 
 protected:
     bool m_bDropPosVisible;
-    CPoint m_ptSavedCaretPos;
+    CEPoint m_ptSavedCaretPos;
     bool m_bSelectionPushed;
-    CPoint m_ptSavedSelStart, m_ptSavedSelEnd;
+    CEPoint m_ptSavedSelStart, m_ptSavedSelEnd;
 private :
-    CPoint m_ptDropPos;
+    CEPoint m_ptDropPos;
     bool m_bAutoIndent;
 
     //  [JRT]
@@ -124,7 +124,7 @@ public :
     void DoDragScroll (const CPoint & point);
 
     virtual bool QueryEditable ();
-    virtual void UpdateView (CCrystalTextView * pSource, CUpdateContext * pContext, DWORD dwFlags, int nLineIndex = -1) override;
+    virtual void UpdateView (CCrystalTextView * pSource, CUpdateContext * pContext, updateview_flags_t dwFlags, int nLineIndex = -1) override;
 
     void SaveLastSearch(LastSearchInfos *lastSearch);
     bool ReplaceSelection (const tchar_t* pszNewText, size_t cchNewText, DWORD dwFlags, bool bGroupWithPrevious = false);
@@ -165,8 +165,6 @@ protected :
     afx_msg void OnEditRedo ();
     afx_msg void OnUpdateEditAutoComplete (CCmdUI * pCmdUI);
     afx_msg void OnEditAutoComplete ();
-    afx_msg void OnUpdateEditAutoExpand (CCmdUI * pCmdUI);
-    afx_msg void OnEditAutoExpand ();
     afx_msg void OnUpdateEditLowerCase (CCmdUI * pCmdUI);
     afx_msg void OnEditLowerCase ();
     afx_msg void OnUpdateEditUpperCase (CCmdUI * pCmdUI);

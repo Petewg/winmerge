@@ -185,7 +185,7 @@ bool CEditReplaceDlg::
 DoHighlightText ( bool bNotifyIfNotFound, bool bUpdateView/*=true*/)
 {
   ASSERT (m_pBuddy != nullptr);
-  DWORD dwSearchFlags = 0;
+  findtext_flags_t dwSearchFlags = 0;
   if (m_bMatchCase)
     dwSearchFlags |= FIND_MATCH_CASE;
   if (m_bWholeWord)
@@ -226,7 +226,7 @@ DoHighlightText ( bool bNotifyIfNotFound, bool bUpdateView/*=true*/)
 }
 
 bool CEditReplaceDlg::
-DoReplaceText (const tchar_t* /*pszNewText*/, DWORD dwSearchFlags)
+DoReplaceText (const tchar_t* /*pszNewText*/, findtext_flags_t dwSearchFlags)
 {
   ASSERT (m_pBuddy != nullptr);
   // m_pBuddy->m_nLastFindWhatLen
@@ -258,7 +258,7 @@ DoReplaceText (const tchar_t* /*pszNewText*/, DWORD dwSearchFlags)
 }
 
 bool CEditReplaceDlg::
-AdjustSearchPos (CPoint& ptFoundAt) const
+AdjustSearchPos (CEPoint& ptFoundAt) const
 {
   if (m_nScope != 0)
     ptFoundAt = m_pBuddy->GetSearchPos (m_nDirection == 0 ? FIND_DIRECTION_UP : 0);
@@ -391,7 +391,7 @@ OnEditReplace ()
         }
       return;
     }
-  DWORD dwSearchFlags = 0;
+  findtext_flags_t dwSearchFlags = 0;
   if (m_bMatchCase)
     dwSearchFlags |= FIND_MATCH_CASE;
   if (m_bWholeWord)
@@ -443,12 +443,12 @@ OnEditReplaceAll ()
       m_bFound = DoHighlightText ( false, false );
     }
 
-  CPoint m_ptFirstFound = m_ptFoundAt;
+  CEPoint m_ptFirstFound = m_ptFoundAt;
   bool bGroupWithPrevious = false;
 
   while (m_bFound)
     {
-      DWORD dwSearchFlags = 0;
+      findtext_flags_t dwSearchFlags = 0;
       if (m_bMatchCase)
         dwSearchFlags |= FIND_MATCH_CASE;
       if (m_bWholeWord)
@@ -478,7 +478,7 @@ OnEditReplaceAll ()
         }
 
       // calculate the end of the current replacement
-      CPoint m_ptCurrentReplacedEnd = m_pBuddy->GetCursorPos ();
+      CEPoint m_ptCurrentReplacedEnd = m_pBuddy->GetCursorPos ();
 
       // m_ptFoundAt.x has two meanings:
       // (1) One is the position of the word that was found.

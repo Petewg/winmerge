@@ -11,7 +11,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: WinMerge\n"
 "Report-Msgid-Bugs-To: https://bugs.winmerge.org/\n"
-"POT-Creation-Date: 2023-01-08 19:20-0300\n"
+"POT-Creation-Date: 2023-03-13 09:30-0300\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marcello <marcello.mco@gmail.com>\n"
 "Language-Team: Felipe\n"
@@ -1029,7 +1029,7 @@ msgstr "Ignorar números"
 msgid "Ignore c&omment differences"
 msgstr "Ignorar as d&iferenças dos comentários"
 
-msgid "&Include Subfolders"
+msgid "&Include subfolders"
 msgstr "&Incluir as Sub-Pastas"
 
 msgid "&Compare method:"
@@ -1152,10 +1152,10 @@ msgstr "Pe&rguntar quando fechar múltiplas janelas"
 msgid "&Preserve file time in file compare"
 msgstr "&Preservar a hora do arquivo na comparação dos arquivos"
 
-msgid "Show \"Select Files or Folders\" Dialog on Startup"
+msgid "Show \"Select Files or Folders\" dialog on startup"
 msgstr "Mostrar o Diálogo \"Selecionar Arquivos ou Pastas\" na Inicialização"
 
-msgid "Close \"Select Files or Folders\" Dialog on clicking Compare button"
+msgid "Close \"Select Files or Folders\" dialog on clicking Compare button"
 msgstr "Fechar o Diálogo \"Selecionar Arquivos ou Pastas\" ao clicar no botão Comparar"
 
 msgid "Op&en-dialog Auto-Completion:"
@@ -1966,7 +1966,7 @@ msgstr "Incluir &conteúdos únicos das sub-pastas"
 msgid "&Automatically expand all subfolders"
 msgstr "&Expandir automaticamente todas as sub-pastas"
 
-msgid "Ignore &Reparse Points"
+msgid "Ignore &reparse points"
 msgstr "Ignorar os &Pontos da Re-análise"
 
 msgid "Threshold for switching to &quick compare (MB):"
@@ -1978,23 +1978,17 @@ msgstr "Limite para alternar para comparação binária (MB):"
 msgid "&Number of CPU cores to use:"
 msgstr "&Número de núcleos de CPU a serem utilizados:"
 
-msgid "&CSV File Patterns:"
-msgstr "Padrões do Arquivo &CSV:"
-
-msgid "&TSV File Patterns:"
-msgstr "Padrões do Arquivo &TSV:"
+msgid "File patterns:"
+msgstr "Modelos de Arquivos:"
 
 msgid "Custom Delimiter-Separated Values"
 msgstr "Valores Separados por Delimitadores Personalizados"
-
-msgid "File Patterns:"
-msgstr "Modelos de Arquivos:"
 
 msgctxt "Options dialog|Categories"
 msgid "Binary"
 msgstr "Binário"
 
-msgid "Binary File &Patterns:"
+msgid "Binary file &patterns:"
 msgstr "Modelos de Arquivo &Binários:"
 
 msgid "Frhed settings"
@@ -2012,7 +2006,7 @@ msgstr "&Grupo de Caracteres..."
 msgid "Image"
 msgstr "Imagem"
 
-msgid "Image File &Patterns:"
+msgid "Image file &patterns:"
 msgstr "Modelos dos Arquivos de &Imagens:"
 
 msgid "&Enable image compare in folder compare"
@@ -3393,6 +3387,9 @@ msgstr "Ativar o &Máximo de Largura Automática"
 msgid "We&bpage"
 msgstr "Página Web"
 
+msgid "W&rap Text"
+msgstr "O&rganizar Texto"
+
 msgid "Frhed is not installed."
 msgstr "O Frhed não está instalado."
 
@@ -3595,6 +3592,39 @@ msgstr "Imediatamente"
 msgid "Al&l"
 msgstr "Tu&do"
 
+msgid "&Others"
+msgstr "&Outros"
+
+#, c-format
+msgid "Missing plugin name in plugin pipeline: %1"
+msgstr "Nome do plugin ausente na tubulação do plugin: %1"
+
+#, c-format
+msgid "Missing quotation mark in plugin pipeline: %1"
+msgstr "Marca das aspas ausentes na tubulação do plugin: %1"
+
+msgid "Specify plugin arguments"
+msgstr "Especificar os argumentos do plugin"
+
+msgid "Filter applied"
+msgstr "Filtro aplicado"
+
+#, c-format
+msgid "Clipboard at %s"
+msgstr "Área de transferência em %s"
+
+msgid "Clipboard history is disabled.\r\nTo enable clipboard history, press Windows logo key + V and then click the Turn on button."
+msgstr "O histórico de Área de transferência está desabilitado.\r\nPara habilitar histórico de Área de transferência, pressione as teclas Windows + V e depois clique no botão ligar."
+
+msgid "This system does not support clipboard history."
+msgstr "Este sistema não suporta histórico de Área de transferência."
+
+msgid "The 32-bit version of WinMerge does not support Clipboard Compare"
+msgstr "A versão 32-bits do WinMerge não suporta Comparação de Área de transferência"
+
+msgid "WebView2 runtime is not installed. Do you want to download it?"
+msgstr "O runtime do WebView2 não está instalado. Deseja baixá-lo?"
+
 msgid "Prettification"
 msgstr "Embelezamento"
 
@@ -3612,9 +3642,6 @@ msgstr "Validação"
 
 msgid "Decompilation"
 msgstr "Descompilação"
-
-msgid "&Others"
-msgstr "&Outros"
 
 msgid "URL Handling"
 msgstr "Manipulaçãode URL"
@@ -3682,6 +3709,9 @@ msgstr "Ignorar os Campos do CSV"
 msgid "Ignore TSV Fields"
 msgstr "Ignorar os Campos do TSV"
 
+msgid "Ignore Leading Line Numbers"
+msgstr "Ignorar os Números de Linha à Esquerda"
+
 msgid "Apply Prediff Substitution Filters"
 msgstr "Aplicar os Filtros da Substituição da Pré-Diferenciação"
 
@@ -3729,17 +3759,6 @@ msgstr "Desmontar Código IL"
 
 msgid "Disassemble Native Code"
 msgstr "Desmontar Código Nativo"
-
-#, c-format
-msgid "Missing plugin name in plugin pipeline: %1"
-msgstr "Nome do plugin ausente na tubulação do plugin: %1"
-
-#, c-format
-msgid "Missing quotation mark in plugin pipeline: %1"
-msgstr "Marca das aspas ausentes na tubulação do plugin: %1"
-
-msgid "Specify plugin arguments"
-msgstr "Especificar os argumentos do plugin"
 
 msgid "Make characters uppercase"
 msgstr "Converter caracteres para maiúsculos"
@@ -3867,22 +3886,3 @@ msgstr "Manipulador de esquema de URL HTTP com curl. \r\nArgumentos: Opções de
 
 msgid "Windows Registry URL Scheme Handler. \r\nArguments: Command line options passed to the reg.exe command."
 msgstr "Manipulador de esquema de URL de Registro do Windows. \r\nArgumentos: Opções de linha de comando passadas ao comando reg.exe."
-
-msgid "Filter applied"
-msgstr "Filtro aplicado"
-
-#, c-format
-msgid "Clipboard at %s"
-msgstr "Área de transferência em %s"
-
-msgid "Clipboard history is disabled.\r\nTo enable clipboard history, press Windows logo key + V and then click the Turn on button."
-msgstr "O histórico de Área de transferência está desabilitado.\r\nPara habilitar histórico de Área de transferência, pressione as teclas Windows + V e depois clique no botão ligar."
-
-msgid "This system does not support clipboard history."
-msgstr "Este sistema não suporta histórico de Área de transferência."
-
-msgid "The 32-bit version of WinMerge does not support Clipboard Compare"
-msgstr "A versão 32-bits do WinMerge não suporta Comparação de Área de transferência"
-
-msgid "WebView2 runtime is not installed. Do you want to download it?"
-msgstr "O runtime do WebView2 não está instalado. Deseja baixá-lo?"

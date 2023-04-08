@@ -33,7 +33,6 @@
 #include "DiffWrapper.h"
 #include "SyntaxColors.h"
 #include "Merge.h"
-#include "Constants.h"
 #include "MainFrm.h"
 
 #ifdef _DEBUG
@@ -588,7 +587,7 @@ void CHexMergeDoc::CheckFileChanged(void)
 {
 	for (int pane = 0; pane < m_nBuffers; ++pane)
 	{
-		if (m_pView[pane]->IsFileChangedOnDisk(m_filePaths[pane].c_str()) == FileChange::Changed)
+		if (m_pView[pane] && m_pView[pane]->IsFileChangedOnDisk(m_filePaths[pane].c_str()) == FileChange::Changed)
 		{
 			String msg = strutils::format_string1(_("Another application has updated file\n%1\nsince WinMerge scanned it last time.\n\nDo you want to reload the file?"), m_filePaths[pane]);
 			if (AfxMessageBox(msg.c_str(), MB_YESNO | MB_ICONWARNING | MB_DONT_ASK_AGAIN, IDS_FILECHANGED_RESCAN) == IDYES)
@@ -947,7 +946,7 @@ void CHexMergeDoc::OnRefresh()
 void CHexMergeDoc::OnFileRecompareAs(UINT nID)
 {
 	PathContext paths = m_filePaths;
-	DWORD dwFlags[3];
+	fileopenflags_t dwFlags[3];
 	String strDesc[3];
 	int nBuffers = m_nBuffers;
 	PackingInfo infoUnpacker(m_infoUnpacker.GetPluginPipeline());
@@ -976,7 +975,7 @@ void CHexMergeDoc::OnOpenWithUnpacker()
 	{
 		PackingInfo infoUnpacker(dlg.GetPluginPipeline());
 		PathContext paths = m_filePaths;
-		DWORD dwFlags[3] = { FFILEOPEN_NOMRU, FFILEOPEN_NOMRU, FFILEOPEN_NOMRU };
+		fileopenflags_t dwFlags[3] = { FFILEOPEN_NOMRU, FFILEOPEN_NOMRU, FFILEOPEN_NOMRU };
 		String strDesc[3] = { m_strDesc[0], m_strDesc[1], m_strDesc[2] };
 		CloseNow();
 		GetMainFrame()->DoFileOrFolderOpen(&paths, dwFlags, strDesc, _T(""),

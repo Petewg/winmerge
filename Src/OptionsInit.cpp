@@ -71,6 +71,7 @@ void Init(COptionsMgr *pOptions)
 
 	pOptions->InitOption(OPT_SYNTAX_HIGHLIGHT, true);
 	pOptions->InitOption(OPT_WORDWRAP, false);
+	pOptions->InitOption(OPT_WORDWRAP_TABLE, false);
 	pOptions->InitOption(OPT_VIEW_LINENUMBERS, false);
 	pOptions->InitOption(OPT_VIEW_WHITESPACE, false);
 	pOptions->InitOption(OPT_VIEW_EOL, false);
@@ -153,6 +154,7 @@ void Init(COptionsMgr *pOptions)
 	pOptions->InitOption(OPT_CMP_BIN_FILEPATTERNS, _T("*.bin;*.frx"));
 
 	pOptions->InitOption(OPT_CMP_CSV_FILEPATTERNS, _T("*.csv"));
+	pOptions->InitOption(OPT_CMP_CSV_DELIM_CHAR, _T(","));
 	pOptions->InitOption(OPT_CMP_TSV_FILEPATTERNS, _T("*.tsv"));
 	pOptions->InitOption(OPT_CMP_DSV_FILEPATTERNS, _T(""));
 	pOptions->InitOption(OPT_CMP_DSV_DELIM_CHAR, _T(";"));
