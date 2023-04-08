@@ -142,7 +142,7 @@ msgid "&Ignore Color Difference (Color Distance Threshold)"
 msgstr "Αγνόηση Διαφοράς Χρώματος (Color Distance Threshold)""
 
 msgid "Ins&ertion/Deletion Detection"
-msgstr Ανίχνευση Προσθηκών/Διαγραφών"
+msgstr "Ανίχνευση Προσθηκών/Διαγραφών"
 
 #, c-format
 msgid "&None"
@@ -293,7 +293,7 @@ msgstr "Πρόσ&φατα Έργα"
 
 #, c-format
 msgid "Recent F&iles Or Folders"
-msgstr ""
+msgstr "Πρόσφατα αρχεία ή Κατάλογοι"
 
 msgid "E&xit\tCtrl+Q"
 msgstr "Έξοδο&ς\tCtrl+Q"
@@ -360,11 +360,11 @@ msgstr "Ρυθμίσεις Προσθέτων"
 
 #, c-format
 msgid "Ma&nual Prediffer"
-msgstr ""
+msgstr "Χειροκίνητο Prediffer"
 
 #, c-format
 msgid "A&utomatic Prediffer"
-msgstr "Χειροκίνητο Prediffer"
+msgstr "Αυτόματο Prediffer"
 
 #, c-format
 msgid "&Manual Unpacking"
@@ -658,7 +658,7 @@ msgstr "Προε&πισκόπηση Εκτύπωσης..."
 
 #, c-format
 msgid "&Convert Line Endings to"
-msgstr "&Μετατροπή Χαρακτήρα Τέλους Γραμμών"
+msgstr "&Μετατροπή Χαρακτήρων Τέλους Γραμμής σε"
 
 #, c-format
 msgid "Mer&ge Mode\tF9"
@@ -669,7 +669,7 @@ msgstr "Επαναφόρτωση"
 
 #, c-format
 msgid "Reco&mpare As"
-msgstr "Επανασύγκριση Ως"
+msgstr "Σύγκριση εκ νέου Ως"
 
 #, c-format
 msgid "&Undo\tCtrl+Z"
@@ -689,7 +689,7 @@ msgstr "Αντι&γραφή\tCtrl+C"
 
 #, c-format
 msgid "F&ind...\tCtrl+F"
-msgstr "Ανα&ζήτηση...\tCtrl+F"
+msgstr "Εύ&ρεση...\tCtrl+F"
 
 #, c-format
 msgid "Repla&ce...\tCtrl+H"
@@ -697,7 +697,7 @@ msgstr "Αντικατά&σταση...\tCtrl+H"
 
 #, c-format
 msgid "&Marker...\tCtrl+Shift+M"
-msgstr "Σήμανση"
+msgstr "Σημάδι"
 
 #, c-format
 msgid "Advanced"
@@ -709,27 +709,27 @@ msgstr "Αντιγραφή με &Αρίθμηση Γραμμών\tCtrl+Shift+C"
 
 #, c-format
 msgid "&Bookmarks"
-msgstr "Σημάνσεις"
+msgstr "Σελιδοδείκτες"
 
 #, c-format
 msgid "&Toggle Bookmark\tCtrl+F2"
-msgstr "Μεταβολή Σημάνσεων\tCtrl+F2"
+msgstr "Μεταβολή Σελιδοδεικτών\tCtrl+F2"
 
 #, c-format
 msgid "&Next Bookmark\tF2"
-msgstr "Επο&μένη Σήμανση\tF2"
+msgstr "Επο&μένος Σελιδοδείκτης\tF2"
 
 #, c-format
 msgid "&Previous bookmark\tShift+F2"
-msgstr "Π&ροηγουμένη Σήμανση\tShift+F2"
+msgstr "Π&ροηγουμένος Σελιδοδείκτης\tShift+F2"
 
 #, c-format
 msgid "&Clear All Bookmarks"
-msgstr "Κα&τάργηση όλων των Σημάνσεων"
+msgstr "Απαλοι&φή όλων των Σελιδοδεικτών"
 
 #, c-format
 msgid "Syntax Highlight"
-msgstr "&Επισήμανση Κώδικα"
+msgstr "&Επισήμανση σύνταξης"
 
 #, c-format
 msgid "&Diff Context"
@@ -765,7 +765,7 @@ msgstr "&9 Γραμμές"
 
 #, c-format
 msgid "&Toggle All and 0-9 Lines\tCtrl+D"
-msgstr "Μετατροπή Όλων και των Γραμμών 0-9"
+msgstr "Ολική Εναλλαγή και των 0-9 Γραμμών"
 
 msgid "&Invert (Hide Different Lines)"
 msgstr "Αντιστροφή (Απόκρυψη Ανόμοιων Γραμμών)"
@@ -858,57 +858,57 @@ msgstr "Προηγούμενη Διαφορά Μόνο του Αριστερού
 
 #, c-format
 msgid "Next Middle Only Difference\tAlt+8"
-msgstr ""
+msgstr "Επόμενη Διαφορά Μόνο του Μεσαίου"
 
 #, c-format
 msgid "Previous Middle Only Difference\tAlt+Shift+8"
-msgstr ""
+msgstr "Προηγούμενη Διαφορά Μόνο του Μεσαίου"
 
 #, c-format
 msgid "Next Right Only Difference\tAlt+9"
-msgstr ""
+msgstr "Επόμενη Διαφορά Μόνο του Δεξιού"
 
 #, c-format
 msgid "Previous Right Only Difference\tAlt+Shift+9"
-msgstr ""
+msgstr "Προηγούμενη Διαφορά Μόνο του Δεξιού"
 
 msgid "Copy from &Left to"
-msgstr ""
+msgstr "Αντιγραφή από Αριστερό σε"
 
 #, c-format
 msgid "&Middle"
-msgstr ""
+msgstr "Μεσαίο"
 
 #, c-format
 msgid "&Right"
 msgstr "Δε&ξιό"
 
 msgid "Copy from &Middle to"
-msgstr ""
+msgstr "Αντιγραφή από Μεσαίο σε"
 
 #, c-format
 msgid "&Left"
 msgstr "Α&ριστερό"
 
 msgid "Copy from &Right to"
-msgstr ""
+msgstr "Αντιγραφή από Δεξιό σε"
 
 msgid "Copy Selected Line(s) from Le&ft to"
-msgstr ""
+msgstr "Αντιγραφή επιλεγμένων γραμμών από Αριστερό σε"
 
 msgid "Copy Selected Line(s) from Mi&ddle to"
-msgstr ""
+msgstr "Αντιγραφή επιλεγμένων γραμμών από Μεσαίο σε"
 
 msgid "Copy Selected Line(s) from Ri&ght to"
-msgstr ""
+msgstr "Αντιγραφή επιλεγμένων γραμμών από Δεξιό σε"
 
 #, c-format
 msgid "Copy from Left\tAlt+Shift+Right"
-msgstr ""
+msgstr "Αντιγραφή από Αριστερό"
 
 #, c-format
 msgid "Copy from Right\tAlt+Shift+Left"
-msgstr ""
+msgstr "Αντιγραφή από Δεξιό"
 
 msgid "C&opy to Right and Advance\tCtrl+Alt+Right"
 msgstr "Αντιγραφή Δε&ξιά και Μετάβαση σε επομένη\tCtrl+Alt+Right"
@@ -925,70 +925,70 @@ msgid "Cop&y All to Left"
 msgstr "Αντιγραφή όλων &Αριστερά"
 
 msgid "A&uto Merge\tCtrl+Alt+M"
-msgstr ""
+msgstr "Αυόματη Συγχώνευση"
 
 #, c-format
 msgid "Add &Synchronization Point\tAlt+S"
-msgstr ""
+msgstr "Προσθήκη Σημείου Συγχρονισμού"
 
 #, c-format
 msgid "Clear Sync&hronization Points"
-msgstr ""
+msgstr "Απαλοιφή Σημείων Συγχρονισμού"
 
 msgid "Unpac&ker"
-msgstr ""
+msgstr "Εργαλείο Αποσυμπίεσης"
 
 #, c-format
 msgid "&Prediffer"
 msgstr "Προεπε&ξεργαστής Διαφορών"
 
 msgid "Apply Pre&differ..."
-msgstr ""
+msgstr "Εφαρμογή Προεπεξεργαστή Διαφορών..."
 
 msgid "&Transform with editor script..."
-msgstr ""
+msgstr "Μετασχηματισμός με σενάριο επεξεργαστή κειμένου..."
 
 #, c-format
 msgid "Sp&lit"
-msgstr ""
+msgstr "&Διαίρεση"
 
 #, c-format
 msgid "Comp&are"
 msgstr "&Σύγκριση"
 
 msgid "Compare in new &window"
-msgstr ""
+msgstr "Σύγκριση σε νέο &Παράθυρο"
 
 msgid "Compare Non-hor&izontally..."
-msgstr ""
+msgstr "Σύγκριση Μη-Οριζοντίως..."
 
 #, c-format
 msgid "Compare Non-hor&izontally"
-msgstr ""
+msgstr "Σύγκριση Μη-Οριζοντίως"
 
 #, c-format
 msgid "First &left item with second left item"
-msgstr ""
+msgstr "Πρώτο αριστερό στοιχείο με το δεύτερο αριστερό στοιχείο"
 
 #, c-format
 msgid "First &right item with second right item"
-msgstr ""
+msgstr "Πρώτο δεξιό στοιχείο με το δεύτερο δεξιό στοιχείο"
 
 #, c-format
 msgid "&First left item with second right item"
-msgstr ""
+msgstr "Πρώτο αριστερό στοιχείο με το δεύτερο δεξιό στοιχείο"
 
 #, c-format
 msgid "&Second left item with first right item"
-msgstr ""
+msgstr "Δεύτερο αριστερό στοιχείο με το πρώτο δεξιό στοιχείο"
 
 #, c-format
 msgid "Co&mpare As"
-msgstr ""
+msgstr "Σύγκριση Ως"
 
 #, c-format
 msgid "Left to Middle (%1 of %2)"
-msgstr ""
+msgstr "Αριστερό στο Μεσαίο (%1 από %2)"
 
 #, c-format
 msgid "Left to Right (%1 of %2)"
@@ -1000,19 +1000,19 @@ msgstr "Αριστερό στο... (%1 από %2)"
 
 #, c-format
 msgid "Middle to Left (%1 of %2)"
-msgstr ""
+msgstr "Μεσαίο στο Αριστερό (%1 από %2)"
 
 #, c-format
 msgid "Middle to Right (%1 of %2)"
-msgstr ""
+msgstr "Μεσαίο στο Δεξιό (%1 από %2)"
 
 #, c-format
 msgid "Middle to... (%1 of %2)"
-msgstr ""
+msgstr "Μεσαίο στο... (%1 από %2)"
 
 #, c-format
 msgid "Right to Middle (%1 of %2)"
-msgstr ""
+msgstr "Δεξιό στο Μεσαίο (%1 από %2)"
 
 #, c-format
 msgid "Right to Left (%1 of %2)"
@@ -1032,7 +1032,7 @@ msgstr "Αμ&φότερα"
 
 #, c-format
 msgid "&All"
-msgstr ""
+msgstr "Ολα"
 
 #, c-format
 msgid "Re&name"
@@ -1048,7 +1048,7 @@ msgstr "Άνοιγμα Α&ριστερού"
 
 #, c-format
 msgid "Open Midd&le"
-msgstr ""
+msgstr "Άνοιγμα &Μεσαίου"
 
 #, c-format
 msgid "O&pen Right"
@@ -1064,7 +1064,7 @@ msgstr "Αριστερό (%1 από %2)"
 
 #, c-format
 msgid "Middle (%1 of %2)"
-msgstr ""
+msgstr "Μεσαίο (%1 από %2)"
 
 #, c-format
 msgid "Right (%1 of %2)"
@@ -1072,11 +1072,11 @@ msgstr "Δεξιό (%1 από %2)"
 
 #, c-format
 msgid "Both (%1 of %2)"
-msgstr "Αμφότερα (%1από %2)"
+msgstr "Αμφότερα (%1 από %2)"
 
 #, c-format
 msgid "All (%1 of %2)"
-msgstr ""
+msgstr "Ολα (%1 από %2)"
 
 #, c-format
 msgid "Copy &Filenames"
@@ -1084,7 +1084,7 @@ msgstr "Αντιγραφή Ο&νομάτων"
 
 #, c-format
 msgid "Copy Items To Clip&board"
-msgstr ""
+msgstr "Αντιγραφή αντικειμένων στο Πρόχειρο"
 
 #, c-format
 msgid "&Zip"
@@ -1092,15 +1092,15 @@ msgstr ""
 
 #, c-format
 msgid "Both to... (%1 of %2)"
-msgstr ""
+msgstr "Αμφότερα στο... (%1 από %2)"
 
 #, c-format
 msgid "All to... (%1 of %2)"
-msgstr ""
+msgstr "Ολα στο... (%1 από %2)"
 
 #, c-format
 msgid "Differences to... (%1 of %2)"
-msgstr ""
+msgstr "Διαφορές στο... (%1 από %2)"
 
 #, c-format
 msgid "Left Shell menu"
@@ -1116,7 +1116,7 @@ msgstr ""
 
 #, c-format
 msgid "Copy"
-msgstr ""
+msgstr "Αντιγραφή"
 
 #, c-format
 msgid "&Copy Full Path"
@@ -1127,7 +1127,7 @@ msgid "Copy &Filename"
 msgstr "Αντιγραφή Ο&νόματος"
 
 msgid "Unpacker Settings"
-msgstr ""
+msgstr "Ρυθμίσεις Αποσυμπίεσης"
 
 #, c-format
 msgid "<None>"
@@ -1186,21 +1186,21 @@ msgstr "Διαφορές χαρακτήρων &τερματισμού (Win/Unix/
 
 #, c-format
 msgid "Ignore codepage &differences"
-msgstr ""
+msgstr "Οι &διαφορές κωδικοσελίδας να αγνοούνται"
 
 msgid "Ignore num&bers"
-msgstr ""
+msgstr "Οι αρι&θμοί να αγνοούνται"
 
 msgid "Ignore c&omment differences"
-msgstr ""
+msgstr "Οι &διαφορές σχολίων να αγνοούνται"
 
 #, c-format
 msgid "&Include Subfolders"
-msgstr "Οι Υποφάκελοι να &συμπεριληφθούν"
+msgstr "Συμπερίληψη Υποφακέλων"
 
 #, c-format
 msgid "&Compare method:"
-msgstr ""
+msgstr "Μέθοδος σύγκρισης:"
 
 #, c-format
 msgid "Full Contents"
@@ -1212,7 +1212,7 @@ msgstr "Σύντομη Περιεχομένων"
 
 #, c-format
 msgid "Binary Contents"
-msgstr ""
+msgstr "Δυαδικά περιεχόμενα"
 
 #, c-format
 msgid "Modified Date"
@@ -1228,18 +1228,18 @@ msgstr "Μέγεθος"
 
 #, c-format
 msgid "&Load Project..."
-msgstr ""
+msgstr "&Φόρτωση Εργου..."
 
 #, c-format
 msgid "About WinMerge"
 msgstr "Περί του WinMerge"
 
 msgid "Visit the WinMerge Homepage!"
-msgstr "Επισκεφθείτε το Σταθμό του WinMerge!"
+msgstr "Επίσκεψη Διαδικτυακής Σελίδας του WinMerge!"
 
 #, c-format
 msgid "OK"
-msgstr "ΟΚ"
+msgstr "Εντάξει"
 
 #, c-format
 msgid "Contributors"
@@ -1251,7 +1251,7 @@ msgstr "Επιλογή Αρχείων ή Φακέλων"
 
 #, c-format
 msgid "&1st File or Folder"
-msgstr ""
+msgstr "&1ο Αρχείο ή Φάκελος"
 
 #, c-format
 msgid "Re&ad-only"
@@ -1259,7 +1259,7 @@ msgstr "Μόνο για Ανά&γνωση"
 
 #, c-format
 msgid "Swap 1st | 2nd"
-msgstr ""
+msgstr "Αντιμετάθεση 1ου | 2ου "
 
 #, c-format
 msgid "&Browse..."
@@ -1267,15 +1267,15 @@ msgstr "Ανα&ζήτηση..."
 
 #, c-format
 msgid "&2nd File or Folder"
-msgstr ""
+msgstr "&2ο Αρχείο ή Φάκελος"
 
 #, c-format
 msgid "Rea&d-only"
-msgstr ""
+msgstr "Μόνο για Ανά&γνωση"
 
 #, c-format
 msgid "Swap 2nd | 3rd"
-msgstr ""
+msgstr "Αντιμετάθεση 2ου | 3ου "
 
 #, c-format
 msgid "B&rowse..."
@@ -1283,15 +1283,15 @@ msgstr "Ανα&ζήτηση..."
 
 #, c-format
 msgid "&3rd File or Folder (Optional)"
-msgstr ""
+msgstr "&3ο Αρχείο ή Φάκελος (Προαιρετικά)"
 
 #, c-format
 msgid "Read-o&nly"
-msgstr ""
+msgstr "Μόνο για Ανά&γνωση"
 
 #, c-format
 msgid "Swap 1st | 3rd"
-msgstr ""
+msgstr "Αντιμετάθεση 1ου | 3ου "
 
 #, c-format
 msgid "Browse..."
@@ -1299,18 +1299,18 @@ msgstr "Ανα&ζήτηση..."
 
 #, c-format
 msgid " Folder: Filter"
-msgstr ""
+msgstr " Φάκελος: Φίλτρο"
 
 #, c-format
 msgid " File: Unpacker Plugin"
-msgstr ""
+msgstr " Αρχείο: Πρόσθετο Αποσυμπίεσης"
 
 #, c-format
 msgid "Se&lect..."
-msgstr ""
+msgstr "Επι&λογή..."
 
 msgid "Co&mpare"
-msgstr ""
+msgstr "Σύ&γκριση"
 
 #, c-format
 msgid "Cancel"
@@ -1333,17 +1333,17 @@ msgid "Automatically &scroll to first difference"
 msgstr "Αυτόματη &κύλιση στην πρώτη διαφορά"
 
 msgid "Automatically s&croll to first inline difference"
-msgstr ""
+msgstr "Αυτόματη &κύλιση στην πρώτη εντός γραμμής διαφορά"
 
 msgid "Cl&ose windows with 'Esc':"
 msgstr "Κ&λείσιμο παραθύρων με 'Esc':"
 
 #, c-format
 msgid "&Automatically verify paths in Open-dialog"
-msgstr "&Αυτόματη επαλήθευση διαδρομών στο διάλογο ανοίγματος"
+msgstr "&Αυτόματη επαλήθευση διαδρομών στο διάλογο Ανοίγματος"
 
 msgid "Single instance mode:"
-msgstr ""
+msgstr "Λειτουργία μονής παρουσίας"
 
 #, c-format
 msgid "As&k when closing multiple windows"
@@ -1355,10 +1355,10 @@ msgstr "Δια&τήρηση της ώρας τροποποιήσεως κατά 
 
 #, c-format
 msgid "Show \"Select Files or Folders\" Dialog on Startup"
-msgstr ""
+msgstr "Εμφάνιση Διαλόγου \"Επιλογή Αρχείων ή Φακέλων\" στην Έναρξη"
 
 msgid "Close \"Select Files or Folders\" Dialog on clicking Compare button"
-msgstr ""
+msgstr "Κλείσιμο του Διαλόγου \"Επιλογή Αρχείων ή Φακέλων\" στο πάτημα του κουμπιού Σύγκρισης"
 
 #, c-format
 msgid "Op&en-dialog Auto-Completion:"
@@ -1366,7 +1366,7 @@ msgstr "Αυτόματη συμπλήρωση διαλόγου αν&οίγματ
 
 #, c-format
 msgid "Language:"
-msgstr ""
+msgstr "Γλώσσα:"
 
 #, c-format
 msgid "Find"
@@ -1378,7 +1378,7 @@ msgstr "Ανα&ζήτηση για:"
 
 #, c-format
 msgid "Match &whole word only"
-msgstr "Εύρεση ολοκλήρων &λέξεων μόνο"
+msgstr "Ταίριασμα ολοκλήρων &λέξεων μόνο"
 
 #, c-format
 msgid "Match &case"
@@ -1394,7 +1394,7 @@ msgstr "Χωρίς ανα&δίπλωση στο τέλος του αρχείου
 
 #, c-format
 msgid "&Don't close this dialog box"
-msgstr ""
+msgstr "Μη κλείσιμο αυτού του διαλόγου"
 
 #, c-format
 msgid "&Find Next"
@@ -1402,11 +1402,11 @@ msgstr "Εύρεση &Επομένου"
 
 #, c-format
 msgid "Find &Prev"
-msgstr ""
+msgstr "Εύρεση &Προηγούμενου"
 
 #, c-format
 msgid "&Ok"
-msgstr "&ΟΚ"
+msgstr "&Εντάξει"
 
 #, c-format
 msgid "Replace"
@@ -1433,7 +1433,7 @@ msgid "Wh&ole file"
 msgstr "Ό&λου του Αρχείου"
 
 msgid "Find Pre&v"
-msgstr ""
+msgstr "Εύρεση &Προηγ"
 
 #, c-format
 msgid "&Replace"
@@ -1445,11 +1445,11 @@ msgstr "Αντικατάσταση Ό&λων"
 
 #, c-format
 msgid "Markers"
-msgstr ""
+msgstr "Σημάδια"
 
 #, c-format
 msgid "Enable &Markers"
-msgstr ""
+msgstr "Ενργοποίηση Σημαδιών"
 
 #, c-format
 msgid "New"
@@ -1457,14 +1457,14 @@ msgstr "Δημιουργία"
 
 #, c-format
 msgid "&Background color:"
-msgstr ""
+msgstr "Χρώμα υποβάθρου:"
 
 #, c-format
 msgid "&Apply"
 msgstr "Ε&φαρμογή"
 
 msgid "Line Filters"
-msgstr ""
+msgstr "Φίλτρα Γραμμής"
 
 #, c-format
 msgid "Enable Line Filters"
@@ -1483,26 +1483,26 @@ msgid "Remove"
 msgstr "Διαγραφή"
 
 msgid "Substitution Filters"
-msgstr ""
+msgstr "Φίλτρα υποκατάστασης"
 
 msgid "The changes that appear on the panels as the listed pairs below will be ignored or marked as insignificant. Patches are unaffected."
-msgstr ""
+msgstr "Οι αλλαγές που εμφανίζονται στα πλαίσια ως τα παρακάτω ζεύγη, θα αγνοηθούν ή θα επισημανθούν ως ασήμαντες. Τα Patches δεν επηρεάζονται."
 
 msgid "Enable"
-msgstr ""
+msgstr "Ενεργό"
 
 msgid "Add"
-msgstr ""
+msgstr "Προσθήκη"
 
 msgid "Clear"
-msgstr ""
+msgstr "Καθαρισμός"
 
 #, c-format
 msgid "Colors"
 msgstr "Χρώματα"
 
 msgid "Color Scheme:"
-msgstr ""
+msgstr "Χρωματικό Σχήμα:"
 
 #, c-format
 msgid "Background"
