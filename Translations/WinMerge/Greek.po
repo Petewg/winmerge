@@ -3,14 +3,14 @@
 #
 # Translators:
 # * Polyvios J. Simopoulos <polyvios.j.simopoulos at gmail.com>
-# * Pete D. <pete_westgATyahoo.gr> (04/2022)
+# * Pete D. <pete_westgATyahoo.gr> (04/2022 ...)
 msgid ""
 msgstr ""
 "Project-Id-Version: WinMerge\n"
 "Report-Msgid-Bugs-To: https://bugs.winmerge.org/\n"
 "POT-Creation-Date: 2008-03-04 18:02+0000\n"
 "PO-Revision-Date: \n"
-"Last-Translator: Polyvios J. Simopoulos <polyvios.j.simopoulos at gmail.com>\n"
+"Last-Translator: Pete D. <pete_westgATyahoo.gr>\n"
 "Language-Team: English <winmerge-translate@lists.sourceforge.net>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
